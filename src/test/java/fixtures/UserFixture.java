@@ -1,6 +1,6 @@
 package fixtures;
 
-import czachor.jakub.ggs.model.user.User;
+import generic.online.game.server.gogs.model.user.User;
 
 public class UserFixture {
     public static User anonUser() {

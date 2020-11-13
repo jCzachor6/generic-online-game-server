@@ -1,8 +1,8 @@
 package fixtures;
 
-import czachor.jakub.ggs.model.queue.Queue;
-import czachor.jakub.ggs.model.queue.QueueStatus;
-import czachor.jakub.ggs.model.user.User;
+import generic.online.game.server.gogs.model.queue.Queue;
+import generic.online.game.server.gogs.model.queue.QueueStatus;
+import generic.online.game.server.gogs.model.user.User;
 
 import java.util.HashSet;
 import java.util.Set;
