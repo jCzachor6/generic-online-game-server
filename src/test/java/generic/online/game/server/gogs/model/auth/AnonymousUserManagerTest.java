@@ -11,53 +11,39 @@ import org.mockito.Mockito;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class AnonymousManagerTest {
-    public GameUserSettings settings;
+public class AnonymousUserManagerTest {
+    public GameUserSettings settings = Mockito.mock(GameUserSettings.class);
     public AnonymousPrefixGenerator anonymousPrefixGenerator = Mockito.mock(AnonymousPrefixGenerator.class);
     public PasswordGenerator anonymousPasswordGenerator = Mockito.mock(PasswordGenerator.class);
+    public AnonymousUserManager anonymousUserManager;
 
     @Before
     public void setup() {
         when(anonymousPrefixGenerator.generate()).thenReturn("prefix_");
         when(anonymousPasswordGenerator.generate()).thenReturn("1111");
-        settings = GameUserSettings
-                .builder()
-                .anonymousPasswordGenerator(anonymousPasswordGenerator)
-                .anonymousPrefixGenerator(anonymousPrefixGenerator)
-                .anonymousUser(true)
-                .build();
-
+        when(settings.isAnonymousUser()).thenReturn(true);
+        anonymousUserManager = new AnonymousUserManager(settings, anonymousPrefixGenerator, anonymousPasswordGenerator);
     }
 
     @Test
     public void shouldGenerateAnonymousAuthRequest() {
-        AuthRequest result = new AnonymousManager(null, settings).setupAnonymous();
+        AuthRequest result = anonymousUserManager.setupAnonymous();
         assertEquals("prefix_", result.getUsername());
         assertEquals("1111", result.getPassword());
     }
 
     @Test
     public void shouldGenerateAnonymousAuthRequestOnEmptyUsername() {
-        AuthRequest result = new AnonymousManager(new AuthRequest(), settings).setupAnonymous();
+        AuthRequest result = anonymousUserManager.setupAnonymous();
         assertEquals("prefix_", result.getUsername());
         assertEquals("1111", result.getPassword());
-    }
-
-    @Test
-    public void shouldReturnSameAuthRequest() {
-        AuthRequest request = new AuthRequest();
-        request.setUsername("username");
-        request.setPassword("password");
-        AuthRequest result = new AnonymousManager(request, settings).setupAnonymous();
-        assertEquals("username", result.getUsername());
-        assertEquals("password", result.getPassword());
     }
 
     @Test
     public void shouldSetupSuffixToUsername() {
         AuthRequest request = new AuthRequest();
         request.setUsername("username");
-        AuthRequest result = new AnonymousManager(request, settings).setupAnonymousSuffix("SUFFIX");
+        AuthRequest result = anonymousUserManager.setupAnonymousSuffix(request, "SUFFIX");
         assertEquals("usernameSUFFIX", result.getUsername());
     }
 

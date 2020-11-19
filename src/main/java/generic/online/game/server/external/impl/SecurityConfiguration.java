@@ -12,9 +12,4 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration extends GgsSecurityConfiguration {
-
-    @Autowired
-    public SecurityConfiguration(JwtUserDetailsService jwtUserDetailsService, PasswordEncoder passwordEncoder) {
-        super(jwtUserDetailsService, passwordEncoder);
-    }
 }

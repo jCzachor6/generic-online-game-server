@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tic-tac-toe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="styles.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="coordinator-messages.js"></script>
+    <script src="client.js"></script>
+</head>
+<body>
+<div class="main container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="pane border">
+                <div id="user-content" class="content" style="display: none">
+                    <div>USERNAME: <span id="username">---</span></div>
+                    <div>PASSWORD: <span id="password">---</span></div>
+                    <div>STATUS: <span id="status">---</span></div>
+                    <div>
+                        <button class="btn btn-dark" onClick="logout()" type="button">Logout</button>
+                    </div>
+                </div>
+                <div id="auth-content" class="content">
+                    LOGIN/REGISTER
+                    <form class="well" onsubmit="return false;">
+                        <input class="msg input-xlarge" id="in-user" placeholder="Username" type="text"/>
+                        <input class="msg input-xlarge" id="in-password" placeholder="Password" type="text"/>
+                        <div>
+                            <button class="btn btn-dark" onClick="login()" type="button">Login</button>
+                            <button class="btn btn-dark" onClick="register()" type="button">Register</button>
+                            <button class="btn btn-dark" onClick="anonymous()" type="button">Anonymous</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="search-content" class="content" style="display: none">
+                    SEARCH
+                    <div>
+                        <button type="button" onClick="coordinatorSearchMessage()" class="btn btn-info">Search</button>
+                        <button type="button" onClick="coordinatorCancelMessage()" class="btn btn-danger">Cancel</button>
+                    </div>
+                    Searching: <span id="searching-timer">0</span>s
+                </div>
+                <div id="game-found-content" class="content" style="display: none">
+                    GAME FOUND
+                    <div>
+                        <button type="button" onClick="coordinatorAcceptMessage()" class="btn btn-success">Accept</button>
+                        <button type="button" onClick="coordinatorDeclineMessage()" class="btn btn-warning">Deny</button>
+                    </div>
+                    Waiting: <span id="accept-timer">0</span>s
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="pane border">
+                <div class="container">
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-sm-4 p-0">
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                        </div>
+                        <div class="col-sm-4 p-0">
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                        </div>
+                        <div class="col-sm-4 p-0">
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

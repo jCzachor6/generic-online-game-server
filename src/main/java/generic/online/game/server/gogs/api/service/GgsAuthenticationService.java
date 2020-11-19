@@ -1,12 +1,12 @@
-package generic.online.game.server.gogs.api;
+package generic.online.game.server.gogs.api.service;
 
-import generic.online.game.server.gogs.api.service.GgsUserService;
-import generic.online.game.server.gogs.model.auth.AnonymousManager;
+import com.corundumstudio.socketio.HandshakeData;
+import generic.online.game.server.gogs.model.auth.AnonymousUserManager;
+import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
 import generic.online.game.server.gogs.model.auth.jwt.JwtTokenProvider;
 import generic.online.game.server.gogs.model.auth.model.AuthRequest;
 import generic.online.game.server.gogs.model.auth.model.AuthResponse;
-import generic.online.game.server.gogs.model.user.User;
-import generic.online.game.server.gogs.model.user.UserBasicData;
 import generic.online.game.server.gogs.settings.GameUserSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,20 +24,27 @@ public class GgsAuthenticationService {
     private final GameUserSettings gameUserSettings;
     private final GgsUserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AnonymousUserManager anonymousManager;
 
-    public AuthResponse authenticateUser(AuthRequest request) throws Exception {
-        request = new AnonymousManager(request, gameUserSettings).setupAnonymous();
-        if (request.isAnonymous()) {
-            return registerUser(request);
-        }
+    public AuthResponse anonymousUser() throws Exception {
+        return registerUser(anonymousManager.setupAnonymous());
+    }
+
+    public AuthResponse authenticateUser(AuthRequest request) {
         return auth(request, request.getPassword());
     }
 
+    public boolean authenticateUser(HandshakeData request) {
+        return jwtAuthenticationFilter.doFilterSocketToken(request);
+    }
+
     public AuthResponse registerUser(AuthRequest request) throws Exception {
+        validateUsername(request.getUsername());
         User user = userService.createOne(request.getUsername(), passwordEncoder.encode(request.getPassword()));
         if (gameUserSettings.isAnonymousUser() && request.isAnonymous()) {
-            request = new AnonymousManager(request, gameUserSettings).setupAnonymousSuffix(user.getId());
-            user.getBasicData().setUsername(request.getUsername());
+            request = anonymousManager.setupAnonymousSuffix(request, user.getId());
+            user.setUsername(request.getUsername());
             AuthResponse saved = edit(user, request.getPassword());
             return new AuthResponse(saved.getId(), saved.getUsername(), request.getPassword(), saved.getJwt());
         }
@@ -54,11 +61,17 @@ public class GgsAuthenticationService {
     }
 
     private AuthResponse edit(User user, String password) {
-        UserBasicData bd = user.getBasicData();
-        this.userService.editUsername(user.getId(), bd.getUsername());
+        this.userService.editUsername(user.getId(), user.getUsername());
         AuthRequest request = new AuthRequest();
-        request.setUsername(bd.getUsername());
-        request.setPassword(bd.getPassword());
+        request.setUsername(user.getUsername());
+        request.setPassword(user.getPassword());
         return auth(request, password);
+    }
+
+    private void validateUsername(String username) throws Exception {
+        User found = userService.getOneByUsername(username);
+        if (found != null) {
+            throw new Exception("Username already taken. ");
+        }
     }
 }

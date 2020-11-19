@@ -2,25 +2,29 @@ package generic.online.game.server.gogs.model.auth;
 
 import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
 import generic.online.game.server.gogs.model.auth.jwt.JwtUserDetailsService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
-@RequiredArgsConstructor
 public class GgsSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    private final JwtUserDetailsService jwtUserDetailsService;
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtUserDetailsService jwtUserDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/auth/**").permitAll();
         http.csrf().disable();
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.headers().frameOptions().disable();
     }
 
@@ -42,5 +46,10 @@ public class GgsSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 }

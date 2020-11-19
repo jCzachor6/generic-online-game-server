@@ -1,18 +1,18 @@
 package generic.online.game.server.external.impl;
 
 import generic.online.game.server.gogs.impl.PinPasswordGenerator;
+import generic.online.game.server.gogs.impl.RoomUuidGenerator;
 import generic.online.game.server.gogs.impl.SimpleSearch;
 import generic.online.game.server.gogs.impl.StringPrefixGenerator;
-import generic.online.game.server.gogs.settings.CoordinatorSettings;
-import generic.online.game.server.gogs.settings.GameServerSettings;
-import generic.online.game.server.gogs.settings.GameUserSettings;
-import generic.online.game.server.gogs.settings.JwtSettings;
+import generic.online.game.server.gogs.settings.*;
+import generic.online.game.server.gogs.utils.AnonymousPrefixGenerator;
+import generic.online.game.server.gogs.utils.PasswordGenerator;
+import generic.online.game.server.gogs.utils.RoomIdGenerator;
+import generic.online.game.server.gogs.utils.SearchBehaviour;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @ComponentScan(basePackages = "generic.online.game.server.gogs")
@@ -22,8 +22,6 @@ public class TttGameServerConfiguration {
     public GameUserSettings gameUserSettings() {
         return GameUserSettings.builder()
                 .anonymousUser(true)
-                .anonymousPrefixGenerator(new StringPrefixGenerator("player_"))
-                .anonymousPasswordGenerator(new PinPasswordGenerator())
                 .build();
     }
 
@@ -53,15 +51,36 @@ public class TttGameServerConfiguration {
     @Bean
     public CoordinatorSettings coordinatorSettings() {
         return CoordinatorSettings.builder()
-                .maximumSearchTime(300)
                 .acceptBeforeStart(true)
-                .maximumAcceptTime(30)
-                .searchCriteria(new SimpleSearch(2))
+                .maximumAcceptTime(15)
                 .build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SocketSettings socketSettings() {
+        return SocketSettings.builder()
+                .namespace("/ttt")
+                .port(9092)
+                .build();
+    }
+
+    @Bean
+    public AnonymousPrefixGenerator anonymousPrefixGenerator() {
+        return new StringPrefixGenerator("player_");
+    }
+
+    @Bean
+    public PasswordGenerator passwordGenerator() {
+        return new PinPasswordGenerator();
+    }
+
+    @Bean
+    public SearchBehaviour searchBehaviour() {
+        return new SimpleSearch(2);
+    }
+
+    @Bean
+    public RoomIdGenerator roomIdGenerator() {
+        return new RoomUuidGenerator();
     }
 }

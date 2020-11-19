@@ -1,9 +1,10 @@
 package generic.online.game.server.gogs.model.queue;
 
-import generic.online.game.server.gogs.model.user.User;
+import generic.online.game.server.gogs.model.auth.User;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -14,7 +15,7 @@ public class Queue {
 
     public Queue found(Set<User> users) {
         return Queue.builder()
-                .users(users)
+                .users(new HashSet<>(users))
                 .status(QueueStatus.FOUND)
                 .build();
     }

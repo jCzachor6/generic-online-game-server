@@ -16,7 +16,7 @@ public class JwtTokenRetrieverTest {
     public void shouldRetrieveToken() {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         when(req.getHeader("Authorization")).thenReturn("Bearer token");
-        Optional<String> result = new JwtTokenRetriever(req).getToken();
+        Optional<String> result = new JwtTokenRetriever(req.getHeader("Authorization")).getToken();
         assertEquals(Optional.of("token"), result);
     }
 
@@ -24,7 +24,7 @@ public class JwtTokenRetrieverTest {
     public void shouldReturnEmpty() {
         HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
         when(req.getHeader("Authorization")).thenReturn("123");
-        Optional<String> result = new JwtTokenRetriever(req).getToken();
+        Optional<String> result = new JwtTokenRetriever(req.getHeader("Authorization")).getToken();
         assertEquals(Optional.empty(), result);
     }
 }

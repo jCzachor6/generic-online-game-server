@@ -11,6 +11,4 @@ import lombok.ToString;
 @Getter
 public class GameUserSettings {
     private final boolean anonymousUser;
-    private final AnonymousPrefixGenerator anonymousPrefixGenerator;
-    private final PasswordGenerator anonymousPasswordGenerator;
 }

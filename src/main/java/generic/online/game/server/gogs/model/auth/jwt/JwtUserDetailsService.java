@@ -1,7 +1,7 @@
 package generic.online.game.server.gogs.model.auth.jwt;
 
 import generic.online.game.server.gogs.api.service.GgsUserService;
-import generic.online.game.server.gogs.model.user.User;
+import generic.online.game.server.gogs.model.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +27,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         return Optional.ofNullable(user).map( u ->
                 new UserPrincipal(
                         u.getId(),
-                        u.getBasicData().getUsername(),
-                        u.getBasicData().getPassword(),
+                        u.getUsername(),
+                        u.getPassword(),
                         ROLE,
                         Collections.singletonList(new SimpleGrantedAuthority(ROLE))))
                 .orElse(null);

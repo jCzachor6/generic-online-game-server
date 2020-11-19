@@ -1,4 +1,4 @@
-package generic.online.game.server.external.impl;
+package generic.online.game.server.external.impl.user;
 
 import lombok.Data;
 

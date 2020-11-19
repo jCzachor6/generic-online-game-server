@@ -2,7 +2,7 @@ package generic.online.game.server.gogs.model;
 
 import generic.online.game.server.gogs.model.queue.Queue;
 import generic.online.game.server.gogs.model.queue.QueueStatus;
-import generic.online.game.server.gogs.model.user.User;
+import generic.online.game.server.gogs.model.auth.User;
 import fixtures.QueueFixture;
 import fixtures.UserFixture;
 import junit.framework.TestCase;

@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 @Builder
 @Getter
-public class CoordinatorSettings {
-    private final boolean acceptBeforeStart;
-    private final int maximumAcceptTime;
+public class SocketSettings {
+    private final String namespace;
+    private final int port;
 }

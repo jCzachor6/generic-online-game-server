@@ -1,5 +1,6 @@
 package generic.online.game.server.gogs.api;
 
+import generic.online.game.server.gogs.api.service.GgsAuthenticationService;
 import generic.online.game.server.gogs.model.auth.model.AuthRequest;
 import generic.online.game.server.gogs.model.auth.model.AuthResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,10 @@ public class GgsAuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerUser(@RequestBody AuthRequest request) throws Exception {
         return ResponseEntity.ok(service.registerUser(request));
+    }
+
+    @PostMapping("/anonymous")
+    public ResponseEntity<AuthResponse> anonymousUser() throws Exception {
+        return ResponseEntity.ok(service.anonymousUser());
     }
 }
