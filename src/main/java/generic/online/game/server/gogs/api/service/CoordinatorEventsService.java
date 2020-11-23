@@ -7,8 +7,7 @@ import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
-import generic.online.game.server.gogs.model.socket.message.coordinator.CoordinatorMessage;
-import generic.online.game.server.gogs.model.socket.coordinator.CoordinatorService;
+import generic.online.game.server.gogs.model.socket.coordinator.CoordinatorMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class GgsSocketEventHandler {
+public class CoordinatorEventsService {
     private final Map<String, SocketIOClient> clientsMap;
     private final CoordinatorService coordinatorService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -37,11 +36,29 @@ public class GgsSocketEventHandler {
         client.disconnect();
     }
 
-    @OnEvent(value = "coordinator")
-    public void onEvent(SocketIOClient client, AckRequest request, CoordinatorMessage message) {
-        if (message == null || client.getHandshakeData().getSingleUrlParam("token") == null) {
+    @OnEvent(value = "SEARCH")
+    public void onSearch(SocketIOClient client, AckRequest request, CoordinatorMessage message) {
+        coordinatorService.onSearch(client.get("user"));
+    }
+
+    @OnEvent(value = "CANCEL")
+    public void onCancel(SocketIOClient client, AckRequest request, CoordinatorMessage message) {
+        coordinatorService.onCancel(client.get("user"));
+    }
+
+    @OnEvent(value = "ACCEPT")
+    public void onAccept(SocketIOClient client, AckRequest request, CoordinatorMessage message) {
+        if (message == null || message.getFoundRoomUUID() == null) {
             return;
         }
-        coordinatorService.processMessage(client.get("user"), message);
+        coordinatorService.onAccept(client.get("user"), message.getFoundRoomUUID());
+    }
+
+    @OnEvent(value = "DECLINE")
+    public void onDecline(SocketIOClient client, AckRequest request, CoordinatorMessage message) {
+        if (message == null || message.getFoundRoomUUID() == null) {
+            return;
+        }
+        coordinatorService.onDecline(message.getFoundRoomUUID());
     }
 }

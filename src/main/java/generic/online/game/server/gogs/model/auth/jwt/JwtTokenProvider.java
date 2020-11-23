@@ -1,7 +1,6 @@
 package generic.online.game.server.gogs.model.auth.jwt;
 
-import generic.online.game.server.gogs.model.socket.message.Message;
-import generic.online.game.server.gogs.settings.JwtSettings;
+import generic.online.game.server.gogs.utils.settings.JwtSettings;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -34,7 +33,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJWT(String token) {
-        Claims claims = Jwts.parser().setSigningKey(jwtSettings.getSecret()).parseClaimsJws(token).getBody();
+        Claims claims = getClaims(token);
         return claims.get("username", String.class);
     }
 
@@ -44,7 +43,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSettings.getSecret()).parseClaimsJws(authToken);
+            getClaims(authToken);
             return true;
         } catch (SignatureException
                 | MalformedJwtException

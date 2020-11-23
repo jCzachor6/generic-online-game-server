@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.model.socket.message.coordinator;
+package generic.online.game.server.gogs.model.socket.coordinator;
 
 public enum CoordinatorMessageType {
     //input types

@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.api.service;
+package generic.online.game.server.gogs.utils;
 
 import generic.online.game.server.gogs.model.auth.User;
 

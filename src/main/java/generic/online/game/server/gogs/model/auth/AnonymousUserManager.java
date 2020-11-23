@@ -1,7 +1,7 @@
 package generic.online.game.server.gogs.model.auth;
 
 import generic.online.game.server.gogs.model.auth.model.AuthRequest;
-import generic.online.game.server.gogs.settings.GameUserSettings;
+import generic.online.game.server.gogs.utils.settings.GameUserSettings;
 import generic.online.game.server.gogs.utils.AnonymousPrefixGenerator;
 import generic.online.game.server.gogs.utils.PasswordGenerator;
 import lombok.RequiredArgsConstructor;

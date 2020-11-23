@@ -4,20 +4,44 @@ var searchInterval;
 var acceptInterval
 var foundRoomUUID;
 
+function messageHandler() {
+    return function (data) {
+        var message = JSON.parse(data);
+        console.log(message);
+        switch (message.type) {
+            case 'SEARCHING':
+                coordinatorSearchingHandler(message);
+                break;
+            case 'CANCELED':
+                coordinatorCanceledHandler(message);
+                break;
+            case 'DECLINED':
+                coordinatorDeclinedHandler(message);
+                break;
+            case 'FOUND':
+                coordinatorFoundHandler(message);
+                break;
+            case 'REQUIRE_ACCEPT':
+                coordinatorRequireAcceptHandler(message);
+                break;
+        }
+    }
+}
+
 function coordinatorSearchMessage() {
-    appSocket.emit('coordinator', {type: 'SEARCH'});
+    appSocket.emit('SEARCH', {});
 }
 
 function coordinatorCancelMessage() {
-    appSocket.emit('coordinator', {type: 'CANCEL'});
+    appSocket.emit('CANCEL', {});
 }
 
 function coordinatorAcceptMessage() {
-    appSocket.emit('coordinator', {type: 'ACCEPT', foundRoomUUID: foundRoomUUID});
+    appSocket.emit('ACCEPT', {foundRoomUUID: foundRoomUUID});
 }
 
 function coordinatorDeclineMessage() {
-    appSocket.emit('coordinator', {type: 'DECLINE', foundRoomUUID: foundRoomUUID});
+    appSocket.emit('DECLINE', {foundRoomUUID: foundRoomUUID});
 }
 
 function coordinatorRequireAcceptHandler(msg) {
@@ -69,4 +93,6 @@ function coordinatorFoundHandler(msg) {
         clearInterval(acceptInterval);
     }
     $("#game-found-content").css("display", "none");
+    $("#game-in-content").css("display", "block");
+    connectToGameRoom();
 }

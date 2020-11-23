@@ -13,7 +13,7 @@ public class RoomUuidGeneratorTest {
         RoomIdGenerator generator = new RoomUuidGenerator();
         String result = generator.generate();
         assertNotNull(result);
-        assertEquals(4, result.length());
+        assertEquals(32, result.length());
     }
 
 }

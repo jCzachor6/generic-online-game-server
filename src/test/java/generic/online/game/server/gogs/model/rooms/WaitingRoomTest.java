@@ -16,7 +16,7 @@ public class WaitingRoomTest {
     @Before
     public void init() {
         Set<User> users = Set.of(UserFixture.anonUser(), UserFixture.danyUser());
-        waitingRoom = new WaitingRoom(users, null);
+        waitingRoom = new WaitingRoom("id", users, null, null);
     }
 
     @Test

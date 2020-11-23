@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="game-room-messages.js"></script>
     <script src="coordinator-messages.js"></script>
     <script src="client.js"></script>
 </head>
@@ -52,6 +53,13 @@
                     </div>
                     Waiting: <span id="accept-timer">0</span>s
                 </div>
+                <div id="game-in-content" class="content" style="display: none">
+                    TIC-TAC-TOE
+                    <div>
+                        <button type="button" onClick="ticTacToeRestartMessage()" class="btn btn-info">Restart</button>
+                        <button type="button" onClick="ticTacToeLeaveMessage()" class="btn btn-warning">Leave</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-sm-8">
@@ -59,19 +67,19 @@
                 <div class="container">
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-sm-4 p-0">
-                            <div class="square"></div>
-                            <div class="square"></div>
-                            <div class="square"></div>
+                            <div onclick="tttSetTile(0)" class="square"></div>
+                            <div onclick="tttSetTile(1)" class="square"></div>
+                            <div onclick="tttSetTile(2)" class="square"></div>
                         </div>
                         <div class="col-sm-4 p-0">
-                            <div class="square"></div>
-                            <div class="square"></div>
-                            <div class="square"></div>
+                            <div onclick="tttSetTile(3)" class="square"></div>
+                            <div onclick="tttSetTile(4)" class="square"></div>
+                            <div onclick="tttSetTile(5)" class="square"></div>
                         </div>
                         <div class="col-sm-4 p-0">
-                            <div class="square"></div>
-                            <div class="square"></div>
-                            <div class="square"></div>
+                            <div onclick="tttSetTile(6)" class="square"></div>
+                            <div onclick="tttSetTile(7)" class="square"></div>
+                            <div onclick="tttSetTile(8)" class="square"></div>
                         </div>
                     </div>
                 </div>

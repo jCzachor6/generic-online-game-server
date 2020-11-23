@@ -66,7 +66,7 @@ function setupWebsocket(user) {
     if (appSocket != null) {
         appSocket.disconnect();
     }
-    socket = io('http://localhost:9092/ttt' + '?token=' + user.jwt);
+    socket = io('http://localhost:9092/ttt/coordinator?token=' + user.jwt);
     appSocket = socket.connect();
     appSocket.on('connect', connectHandler());
     appSocket.on('disconnect', disconnectHandler());
@@ -82,30 +82,6 @@ function connectHandler() {
 function disconnectHandler() {
     return function () {
         $("#status").text(disconnected);
-    }
-}
-
-function messageHandler() {
-    return function (data) {
-        var message = JSON.parse(data);
-        console.log(message.type);
-        switch (message.type) {
-            case 'SEARCHING':
-                coordinatorSearchingHandler(message);
-                break;
-            case 'CANCELED':
-                coordinatorCanceledHandler(message);
-                break;
-            case 'DECLINED':
-                coordinatorDeclinedHandler(message);
-                break;
-            case 'FOUND':
-                coordinatorFoundHandler(message);
-                break;
-            case 'REQUIRE_ACCEPT':
-                coordinatorRequireAcceptHandler(message);
-                break;
-        }
     }
 }
 

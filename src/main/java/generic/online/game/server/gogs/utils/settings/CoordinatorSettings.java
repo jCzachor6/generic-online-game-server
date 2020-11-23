@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.settings;
+package generic.online.game.server.gogs.utils.settings;
 
 import lombok.Builder;
 import lombok.Getter;

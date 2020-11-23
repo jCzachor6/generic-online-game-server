@@ -4,7 +4,7 @@ import generic.online.game.server.gogs.impl.PinPasswordGenerator;
 import generic.online.game.server.gogs.impl.RoomUuidGenerator;
 import generic.online.game.server.gogs.impl.SimpleSearch;
 import generic.online.game.server.gogs.impl.StringPrefixGenerator;
-import generic.online.game.server.gogs.settings.*;
+import generic.online.game.server.gogs.utils.settings.*;
 import generic.online.game.server.gogs.utils.AnonymousPrefixGenerator;
 import generic.online.game.server.gogs.utils.PasswordGenerator;
 import generic.online.game.server.gogs.utils.RoomIdGenerator;

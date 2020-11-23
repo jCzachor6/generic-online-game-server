@@ -1,6 +1,6 @@
 package generic.online.game.server.external.impl.user;
 
-import generic.online.game.server.gogs.api.service.GgsUserService;
+import generic.online.game.server.gogs.utils.GgsUserService;
 import generic.online.game.server.gogs.model.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

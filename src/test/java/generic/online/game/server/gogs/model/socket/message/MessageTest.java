@@ -1,5 +1,6 @@
 package generic.online.game.server.gogs.model.socket.message;
 
+import generic.online.game.server.gogs.model.socket.Message;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -26,8 +27,7 @@ public class MessageTest {
         TestMessage subject = new TestMessage();
         subject.setErrorMessage("ERROR");
         subject.setType(TestMessageType.ONE);
-        subject.setDestination("destination");
         assertTrue(subject.isError());
-        assertEquals("{\"destination\":\"destination\",\"type\":\"ONE\",\"errorMessage\":\"ERROR\",\"error\":true}", subject.json());
+        assertEquals("{\"type\":\"ONE\",\"errorMessage\":\"ERROR\",\"error\":true}", subject.json());
     }
 }

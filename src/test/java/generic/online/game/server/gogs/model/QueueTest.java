@@ -1,10 +1,10 @@
 package generic.online.game.server.gogs.model;
 
-import generic.online.game.server.gogs.model.queue.Queue;
-import generic.online.game.server.gogs.model.queue.QueueStatus;
-import generic.online.game.server.gogs.model.auth.User;
 import fixtures.QueueFixture;
 import fixtures.UserFixture;
+import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.model.queue.Queue;
+import generic.online.game.server.gogs.model.queue.QueueStatus;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -46,10 +46,18 @@ public class QueueTest {
     }
 
     @Test
-    public void shouldChangeStatusOnFound(){
+    public void shouldChangeStatusOnFound() {
         Queue queue = QueueFixture.twoUserQueue();
         Queue subject = queue.found(new HashSet<>());
         assertEquals(0, subject.size());
         assertEquals(QueueStatus.FOUND, subject.getStatus());
+    }
+
+    @Test
+    public void shouldPassValueOnFound() {
+        Queue queue = QueueFixture.twoUserQueue();
+        Integer passedValue = 1;
+        Queue subject = queue.found(new HashSet<>(), passedValue);
+        assertEquals(1, subject.getAdditionalData());
     }
 }
