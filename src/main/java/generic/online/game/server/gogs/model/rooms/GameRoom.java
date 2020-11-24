@@ -11,10 +11,12 @@ public class GameRoom<T> {
     protected String roomId;
     protected Set<User> gameUsers;
     protected MessageSender messageSender;
+    protected Operations operations;
 
     public GameRoom(GameRoomInitializerData data) {
         this.roomId = data.getRoomId();
         this.gameUsers = data.getUsers();
         this.messageSender = data.getMessageSender();
+        this.operations = data.getOperations();
     }
 }

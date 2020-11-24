@@ -1,5 +1,6 @@
 package generic.online.game.server.gogs.api.service;
 
+import com.corundumstudio.socketio.ClientOperations;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIONamespace;
 import generic.online.game.server.gogs.model.auth.User;
@@ -13,9 +14,7 @@ import generic.online.game.server.gogs.utils.settings.SocketSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -47,11 +46,28 @@ public class GameFoundService {
     public GameRoom createGameRoom(Set<User> users, Object additionalData) {
         String roomId = roomIdGenerator.generate();
         Map<String, SocketIOClient> clientsMap = new ConcurrentHashMap<>(users.size());
-        GameRoomInitializerData data = new GameRoomInitializerData(roomId, users, new MessageSender(clientsMap));
+        List<Timer> gameRoomTimers = new ArrayList<>();
+        GameRoomInitializerData data = new GameRoomInitializerData(
+                roomId, users, new MessageSender(clientsMap), setupOperations(roomId, gameRoomTimers, clientsMap));
         GameRoom gameRoom = gameRoomInitializer.initialize(data, additionalData);
         String namespaceName = socketSettings.getNamespace() + "/" + roomId;
         SocketIONamespace namespace = socketSettings.getServer().addNamespace(namespaceName);
-        new GameRoomAnnotationsScanner(namespace, gameRoom).setListeners(clientsMap, authenticationFilter);
+        new GameRoomAnnotationsScanner(namespace)
+                .forGameRoom(gameRoom)
+                .setOnEventListeners()
+                .setTickRateListener(gameRoomTimers)
+                .setUserConnectDisconnectListener(clientsMap, authenticationFilter);
         return gameRoom;
+    }
+
+    private Operations setupOperations(String roomId, List<Timer> timers, Map<String, SocketIOClient> clientsMap) {
+        return new Operations() {
+            @Override
+            public void closeRoom() {
+                timers.forEach(Timer::cancel);
+                clientsMap.values().forEach(ClientOperations::disconnect);
+                socketSettings.getServer().removeNamespace(socketSettings.getNamespace() + "/" + roomId);
+            }
+        };
     }
 }

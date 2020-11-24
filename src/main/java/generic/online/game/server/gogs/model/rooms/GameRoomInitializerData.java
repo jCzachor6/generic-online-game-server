@@ -11,4 +11,5 @@ public class GameRoomInitializerData {
     String roomId;
     Set<User> users;
     MessageSender messageSender;
+    Operations operations;
 }

@@ -9,27 +9,50 @@ import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
 import generic.online.game.server.gogs.utils.annotations.OnConnect;
 import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
+import generic.online.game.server.gogs.utils.annotations.OnTick;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class GameRoomAnnotationsScanner {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SocketIONamespace namespace;
-    private final GameRoom gameRoom;
+    private GameRoom gameRoom;
     private List<Method> methods;
 
-    public void setListeners(Map<String, SocketIOClient> clientMap, JwtAuthenticationFilter filter) {
+    public GameRoomAnnotationsScanner setTickRateListener(List<Timer> tickTimers) {
+        for (Method m : methods) {
+            Optional.ofNullable(m.getAnnotation(OnTick.class)).ifPresent(om -> {
+                Timer timer = new TickRateTimer(m, gameRoom).startTicking(1000 / om.tickRate());
+                tickTimers.add(timer);
+            });
+        }
+        return this;
+    }
+
+    public GameRoomAnnotationsScanner forGameRoom(GameRoom room) {
+        gameRoom = room;
         methods = Arrays.asList(gameRoom.getClass().getMethods());
-        setOnEventListeners();
-        setOnConnectListener(clientMap, filter);
-        setOnDisconnectListener(clientMap, filter);
+        return this;
+    }
+
+    public GameRoomAnnotationsScanner setUserConnectDisconnectListener(
+            Map<String, SocketIOClient> clientMap, JwtAuthenticationFilter filter) {
+        this.setOnConnectListener(clientMap, filter);
+        this.setOnDisconnectListener(clientMap, filter);
+        return this;
+    }
+
+    public GameRoomAnnotationsScanner setOnEventListeners() {
+        for (Method m : methods) {
+            Optional.ofNullable(m.getAnnotation(OnMessage.class)).ifPresent(om -> {
+                namespace.addEventListener(om.value(), Object.class, onMessageDataListener(m));
+            });
+        }
+        return this;
     }
 
     private void setOnConnectListener(Map<String, SocketIOClient> clientMap, JwtAuthenticationFilter filter) {
@@ -68,14 +91,6 @@ public class GameRoomAnnotationsScanner {
                         }
                     });
         });
-    }
-
-    private void setOnEventListeners() {
-        for (Method m : methods) {
-            Optional.ofNullable(m.getAnnotation(OnMessage.class)).ifPresent(om -> {
-                namespace.addEventListener(om.value(), Object.class, onMessageDataListener(m));
-            });
-        }
     }
 
     private DataListener<Object> onMessageDataListener(Method m) {

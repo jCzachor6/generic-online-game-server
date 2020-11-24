@@ -37,7 +37,6 @@ public class TttGameServerConfiguration {
     @Bean
     public GameServerSettings gameServerSettings() {
         return GameServerSettings.builder()
-                .tickRate(0)
                 .closeEmptyRooms(true)
                 .allowRejoin(true)
                 .roomMaxCapacity(10)

@@ -14,6 +14,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 import java.util.stream.Collectors;
 
 import static generic.online.game.server.external.impl.game.TttMessageType.*;
@@ -31,6 +32,7 @@ public class TttRoom extends GameRoom<TttMessage> {
     private boolean playerOasksForRestart;
     private boolean gameOver;
     private String userTurn;
+    private Timer closeTimer;
 
     public TttRoom(GameRoomInitializerData data) {
         super(data);
@@ -59,6 +61,7 @@ public class TttRoom extends GameRoom<TttMessage> {
             gameOver = checkTiles('x') || checkTiles('o');
             if (gameOver) {
                 messageSender.send(tokens, getRoomId(), new TttMessage().setData(this, RESULT));
+                closeTimer = getOperations().closeRoomAfterTime(10);
             } else {
                 messageSender.send(tokens, getRoomId(), new TttMessage().setData(this, DATA));
             }
@@ -77,6 +80,10 @@ public class TttRoom extends GameRoom<TttMessage> {
             playerOasksForRestart = true;
         }
         if (playerOasksForRestart && playerXasksForRestart) {
+            if (closeTimer != null) {
+                closeTimer.cancel();
+                closeTimer.purge();
+            }
             playerXasksForRestart = false;
             playerOasksForRestart = false;
             this.setTiles(Arrays.asList(EMPTY_ROOM));

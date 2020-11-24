@@ -8,7 +8,6 @@ import lombok.ToString;
 @Builder
 @Getter
 public class GameServerSettings {
-    private final int tickRate;
     private final boolean closeEmptyRooms;
     private final boolean allowRejoin;
     private final int maximumRejoinTime;
