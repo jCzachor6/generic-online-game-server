@@ -2,7 +2,7 @@ var searchCounter = 0;
 var acceptCounter = 20;
 var searchInterval;
 var acceptInterval
-var foundRoomUUID;
+var roomUUID;
 
 function messageHandler() {
     return function (data) {
@@ -37,15 +37,15 @@ function coordinatorCancelMessage() {
 }
 
 function coordinatorAcceptMessage() {
-    appSocket.emit('ACCEPT', {foundRoomUUID: foundRoomUUID});
+    appSocket.emit('ACCEPT', {roomUUID: roomUUID});
 }
 
 function coordinatorDeclineMessage() {
-    appSocket.emit('DECLINE', {foundRoomUUID: foundRoomUUID});
+    appSocket.emit('DECLINE', {roomUUID: roomUUID});
 }
 
 function coordinatorRequireAcceptHandler(msg) {
-    foundRoomUUID = msg.foundRoomUUID;
+    roomUUID = msg.roomUUID;
     $("#search-content").css("display", "none");
     $("#game-found-content").css("display", "block");
     if (searchInterval) {
@@ -88,7 +88,7 @@ function coordinatorDeclinedHandler(msg) {
 }
 
 function coordinatorFoundHandler(msg) {
-    foundRoomUUID = msg.foundRoomUUID;
+    roomUUID = msg.roomUUID;
     if (acceptInterval) {
         clearInterval(acceptInterval);
     }

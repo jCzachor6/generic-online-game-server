@@ -1,15 +1,15 @@
 package generic.online.game.server.gogs.model.rooms;
 
 import generic.online.game.server.gogs.model.auth.User;
-import generic.online.game.server.gogs.model.socket.MessageSender;
+import generic.online.game.server.gogs.model.socket.Messenger;
 import lombok.Value;
 
 import java.util.Set;
 
 @Value
-public class GameRoomInitializerData {
+public class RoomInitializerData {
     String roomId;
     Set<User> users;
-    MessageSender messageSender;
+    Messenger messenger;
     Operations operations;
 }

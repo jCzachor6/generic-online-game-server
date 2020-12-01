@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.model.rooms;
+package generic.online.game.server.gogs.impl.rooms.coordinator.waiting;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,8 @@ public class CloseWaitingRoomTimer extends TimerTask {
 
     @Override
     public void run() {
-        if (!waitingRoomMap.get(roomId).allAccepted()) {
+        WaitingRoom wr = waitingRoomMap.get(roomId);
+        if (wr != null && !waitingRoomMap.get(roomId).allAccepted()) {
             waitingRoomMap.remove(roomId);
         }
     }

@@ -12,5 +12,4 @@ public class User {
     private String token;
     private String username;
     private String password;
-    private HashMap<String, String> criteria;
 }

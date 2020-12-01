@@ -4,11 +4,8 @@ import generic.online.game.server.gogs.impl.PinPasswordGenerator;
 import generic.online.game.server.gogs.impl.RoomUuidGenerator;
 import generic.online.game.server.gogs.impl.SimpleSearch;
 import generic.online.game.server.gogs.impl.StringPrefixGenerator;
+import generic.online.game.server.gogs.utils.*;
 import generic.online.game.server.gogs.utils.settings.*;
-import generic.online.game.server.gogs.utils.AnonymousPrefixGenerator;
-import generic.online.game.server.gogs.utils.PasswordGenerator;
-import generic.online.game.server.gogs.utils.RoomIdGenerator;
-import generic.online.game.server.gogs.utils.SearchBehaviour;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,27 +32,6 @@ public class TttGameServerConfiguration {
     }
 
     @Bean
-    public GameServerSettings gameServerSettings() {
-        return GameServerSettings.builder()
-                .closeEmptyRooms(true)
-                .allowRejoin(true)
-                .roomMaxCapacity(10)
-                .maximumRejoinTime(300)
-                .maximumJoinTime(30)
-                .saveReplays(false)
-                .privateRooms(true)
-                .build();
-    }
-
-    @Bean
-    public CoordinatorSettings coordinatorSettings() {
-        return CoordinatorSettings.builder()
-                .acceptBeforeStart(true)
-                .maximumAcceptTime(15)
-                .build();
-    }
-
-    @Bean
     public SocketSettings socketSettings() {
         return SocketSettings.builder()
                 .namespace("/ttt")
@@ -71,15 +47,5 @@ public class TttGameServerConfiguration {
     @Bean
     public PasswordGenerator passwordGenerator() {
         return new PinPasswordGenerator();
-    }
-
-    @Bean
-    public SearchBehaviour searchBehaviour() {
-        return new SimpleSearch(2);
-    }
-
-    @Bean
-    public RoomIdGenerator roomIdGenerator() {
-        return new RoomUuidGenerator();
     }
 }

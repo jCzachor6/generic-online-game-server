@@ -1,9 +1,9 @@
 function connectToGameRoom() {
-    socket = io('http://localhost:9092/ttt/' + foundRoomUUID + '?token=' + user.jwt);
+    socket = io('http://localhost:9092/ttt/' + roomUUID + '?token=' + user.jwt);
     appSocket = socket.connect();
     appSocket.on('connect', connectHandler());
     appSocket.on('disconnect', disconnectHandler());
-    appSocket.on(foundRoomUUID, ticTacToeMessageHandler());
+    appSocket.on(roomUUID, ticTacToeMessageHandler());
     appSocket.emit('DATA', {});
 }
 
@@ -20,6 +20,9 @@ function ticTacToeMessageHandler() {
                 break;
             case 'RESTART':
                 onRestartReceived(message);
+                break;
+            case 'CLOSE':
+                onCloseReceived(message);
                 break;
         }
     }
@@ -52,6 +55,17 @@ function onRestartReceived(message) {
         $(squares[i]).removeClass('x');
         $(squares[i]).removeClass('o');
     }
+}
+
+function onCloseReceived(message) {
+    var squares = $(".square");
+    for (var i = 0; i < squares.length; i++) {
+        $(squares[i]).removeClass('x');
+        $(squares[i]).removeClass('o');
+    }
+    $("#game-in-content").css("display", "none");
+    $("#search-content").css("display", "block");
+    setupWebsocket(user);
 }
 
 function onResultReceived(message) {

@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @RequiredArgsConstructor
-public class CloseGameRoomTimer extends TimerTask {
+public class CloseRoomTimer extends TimerTask {
     private final Operations operations;
 
     @Override

@@ -1,8 +1,8 @@
 package generic.online.game.server.external.impl.game;
 
 import generic.online.game.server.gogs.model.auth.User;
-import generic.online.game.server.gogs.model.rooms.GameRoom;
-import generic.online.game.server.gogs.model.rooms.GameRoomInitializerData;
+import generic.online.game.server.gogs.model.rooms.Room;
+import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.annotations.OnConnect;
 import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
-import java.util.stream.Collectors;
 
 import static generic.online.game.server.external.impl.game.TttMessageType.*;
 import static generic.online.game.server.external.impl.game.TttRoomInitializer.EMPTY_ROOM;
@@ -24,7 +23,7 @@ import static generic.online.game.server.external.impl.game.TttRoomInitializer.E
 @Getter
 @Setter
 @ToString
-public class TttRoom extends GameRoom<TttMessage> {
+public class TttRoom extends Room<TttMessage> {
     private List<Character> tiles; //n - none, x, o
     private User playerX;
     private User playerO;
@@ -34,7 +33,7 @@ public class TttRoom extends GameRoom<TttMessage> {
     private String userTurn;
     private Timer closeTimer;
 
-    public TttRoom(GameRoomInitializerData data) {
+    public TttRoom(RoomInitializerData data) {
         super(data);
     }
 
@@ -50,33 +49,37 @@ public class TttRoom extends GameRoom<TttMessage> {
 
     @OnMessage(value = "DATA")
     public void processDataMessage(User user, TttMessage msg) {
-        messageSender.send(user.getToken(), getRoomId(), new TttMessage().setData(this, DATA));
+        getMessenger().send(user.getToken(), getRoomId(), new TttMessage().setData(this, DATA));
     }
 
     @OnMessage(value = "SET_TILE")
     public void processSetTileMessage(User user, TttMessage msg) {
         if (!gameOver) {
             this.setTile(user, msg.getTileIndex());
-            List<String> tokens = gameUsers.stream().map(User::getToken).collect(Collectors.toUnmodifiableList());
             gameOver = checkTiles('x') || checkTiles('o');
             if (gameOver) {
-                messageSender.send(tokens, getRoomId(), new TttMessage().setData(this, RESULT));
+                getMessenger().sendToAll(this, new TttMessage().setData(this, RESULT));
                 closeTimer = getOperations().closeRoomAfterTime(10);
             } else {
-                messageSender.send(tokens, getRoomId(), new TttMessage().setData(this, DATA));
+                getMessenger().sendToAll(this, new TttMessage().setData(this, DATA));
             }
         }
     }
 
     @OnMessage(value = "LEAVE")
     public void processLeaveMessage(User user, TttMessage msg) {
+        playerXasksForRestart = false;
+        playerOasksForRestart = false;
+        this.setTiles(Arrays.asList(EMPTY_ROOM));
+        getMessenger().sendToAll(this, new TttMessage().setData(this, CLOSE));
+        getOperations().closeRoomAfterTime(3);
     }
 
     @OnMessage(value = "RESTART")
     public void processRestartMessage(User user, TttMessage msg) {
-        if (user.getUsername().equals(playerX.getUsername())) {
+        if (playerX.equals(user)) {
             playerXasksForRestart = true;
-        } else {
+        } else if (playerO.equals(user)) {
             playerOasksForRestart = true;
         }
         if (playerOasksForRestart && playerXasksForRestart) {
@@ -87,7 +90,7 @@ public class TttRoom extends GameRoom<TttMessage> {
             playerXasksForRestart = false;
             playerOasksForRestart = false;
             this.setTiles(Arrays.asList(EMPTY_ROOM));
-            messageSender.send(user.getToken(), getRoomId(), new TttMessage().setData(this, RESTART));
+            getMessenger().send(user.getToken(), getRoomId(), new TttMessage().setData(this, RESTART));
         }
     }
 
@@ -96,7 +99,7 @@ public class TttRoom extends GameRoom<TttMessage> {
             if (playerX.equals(user)) {
                 setTile(tileIndex, 'x');
                 userTurn = playerO.getUsername();
-            } else {
+            } else if (playerO.equals(user)) {
                 setTile(tileIndex, 'o');
                 userTurn = playerX.getUsername();
             }

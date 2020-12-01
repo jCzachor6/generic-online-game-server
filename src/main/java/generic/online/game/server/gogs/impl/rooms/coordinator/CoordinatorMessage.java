@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.model.socket.coordinator;
+package generic.online.game.server.gogs.impl.rooms.coordinator;
 
 import generic.online.game.server.gogs.model.socket.Message;
 import lombok.Data;
@@ -10,16 +10,17 @@ import java.util.HashMap;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class CoordinatorMessage extends Message<CoordinatorMessageType> {
-    private String foundRoomUUID;
+public class CoordinatorMessage extends Message {
+    private CoordinatorMessageType type;
+    private String roomUUID;
     private HashMap<String, String> searchCriteria;
 
     public CoordinatorMessage(CoordinatorMessageType type) {
         this.setType(type);
     }
 
-    public CoordinatorMessage(CoordinatorMessageType type, String foundRoomUUID) {
-        this.setType(type);
-        this.setFoundRoomUUID(foundRoomUUID);
+    public CoordinatorMessage(CoordinatorMessageType type, String roomUUID) {
+        this.type = type;
+        this.roomUUID = roomUUID;
     }
 }

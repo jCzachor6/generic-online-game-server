@@ -7,8 +7,8 @@ import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
 import generic.online.game.server.gogs.model.auth.jwt.JwtTokenProvider;
 import generic.online.game.server.gogs.model.auth.model.AuthRequest;
 import generic.online.game.server.gogs.model.auth.model.AuthResponse;
-import generic.online.game.server.gogs.utils.settings.GameUserSettings;
 import generic.online.game.server.gogs.utils.GgsUserService;
+import generic.online.game.server.gogs.utils.settings.GameUserSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final GameUserSettings gameUserSettings;
     private final GgsUserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -42,8 +41,8 @@ public class AuthenticationService {
 
     public AuthResponse registerUser(AuthRequest request) throws Exception {
         validateUsername(request.getUsername());
-        User user = userService.createOne(request.getUsername(), passwordEncoder.encode(request.getPassword()));
-        if (gameUserSettings.isAnonymousUser() && request.isAnonymous()) {
+        if (request.isAnonymous()) {
+            User user = userService.createOne(request.getUsername(), passwordEncoder.encode(request.getPassword()));
             request = anonymousManager.setupAnonymousSuffix(request, user.getId());
             user.setUsername(request.getUsername());
             AuthResponse saved = edit(user, request.getPassword());

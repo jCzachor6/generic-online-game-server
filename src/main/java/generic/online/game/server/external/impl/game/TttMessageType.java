@@ -1,9 +1,16 @@
 package generic.online.game.server.external.impl.game;
 
+import lombok.ToString;
+
+@ToString
 public enum TttMessageType {
-    DATA,
+    //input
     SET_TILE,
-    RESULT,
     LEAVE,
-    RESTART;
+
+    //output
+    DATA,
+    RESULT,
+    RESTART,
+    CLOSE
 }

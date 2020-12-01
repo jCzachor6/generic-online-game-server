@@ -6,10 +6,7 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
-import generic.online.game.server.gogs.utils.annotations.OnConnect;
-import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
-import generic.online.game.server.gogs.utils.annotations.OnMessage;
-import generic.online.game.server.gogs.utils.annotations.OnTick;
+import generic.online.game.server.gogs.utils.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,36 +14,36 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class GameRoomAnnotationsScanner {
+public class RoomAnnotationsScanner {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final SocketIONamespace namespace;
-    private GameRoom gameRoom;
+    private Room room;
     private List<Method> methods;
 
-    public GameRoomAnnotationsScanner setTickRateListener(List<Timer> tickTimers) {
+    public RoomAnnotationsScanner setTickRateListener(List<Timer> tickTimers) {
         for (Method m : methods) {
             Optional.ofNullable(m.getAnnotation(OnTick.class)).ifPresent(om -> {
-                Timer timer = new TickRateTimer(m, gameRoom).startTicking(1000 / om.tickRate());
+                Timer timer = new TickRateTimer(m, room).startTicking(1000 / om.tickRate());
                 tickTimers.add(timer);
             });
         }
         return this;
     }
 
-    public GameRoomAnnotationsScanner forGameRoom(GameRoom room) {
-        gameRoom = room;
-        methods = Arrays.asList(gameRoom.getClass().getMethods());
+    public RoomAnnotationsScanner forGameRoom(Room room) {
+        this.room = room;
+        methods = Arrays.asList(this.room.getClass().getMethods());
         return this;
     }
 
-    public GameRoomAnnotationsScanner setUserConnectDisconnectListener(
+    public RoomAnnotationsScanner setUserConnectDisconnectListener(
             Map<String, SocketIOClient> clientMap, JwtAuthenticationFilter filter) {
         this.setOnConnectListener(clientMap, filter);
         this.setOnDisconnectListener(clientMap, filter);
         return this;
     }
 
-    public GameRoomAnnotationsScanner setOnEventListeners() {
+    public RoomAnnotationsScanner setOnEventListeners() {
         for (Method m : methods) {
             Optional.ofNullable(m.getAnnotation(OnMessage.class)).ifPresent(om -> {
                 namespace.addEventListener(om.value(), Object.class, onMessageDataListener(m));
@@ -66,7 +63,7 @@ public class GameRoomAnnotationsScanner {
                     .findFirst()
                     .ifPresent(m -> {
                         try {
-                            m.invoke(gameRoom, user);
+                            m.invoke(room, user);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -85,7 +82,7 @@ public class GameRoomAnnotationsScanner {
                     .findFirst()
                     .ifPresent(m -> {
                         try {
-                            m.invoke(gameRoom, user);
+                            m.invoke(room, user);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -98,13 +95,13 @@ public class GameRoomAnnotationsScanner {
             if (message == null || client.getHandshakeData().getSingleUrlParam("token") == null) {
                 return;
             }
-            m.invoke(gameRoom, client.get("user"), objectMapper.convertValue(message, messageClass()));
+            m.invoke(room, client.get("user"), objectMapper.convertValue(message, messageClass()));
         };
     }
 
     private Class<?> messageClass() throws ClassNotFoundException {
         String messageType = StringUtils.substringBetween(
-                gameRoom.getClass().getGenericSuperclass().getTypeName(), "<", ">");
+                room.getClass().getGenericSuperclass().getTypeName(), "<", ">");
         return Class.forName(messageType);
     }
 }

@@ -9,7 +9,8 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TttMessage extends Message<TttMessageType> {
+public class TttMessage extends Message {
+    private TttMessageType type;
     private List<Character> tiles;
     private User playerX;
     private User playerO;

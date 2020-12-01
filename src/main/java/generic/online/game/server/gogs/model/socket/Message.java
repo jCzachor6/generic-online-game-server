@@ -1,13 +1,11 @@
 package generic.online.game.server.gogs.model.socket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 @Data
-public class Message<TYPE> {
-    private TYPE type;
+public class Message {
     private String errorMessage;
 
     public boolean isError() {
@@ -17,9 +15,10 @@ public class Message<TYPE> {
     public String json() {
         try {
             return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return "{}";
+        } catch (Exception e) {
+            Message m = new Message();
+            m.errorMessage = e.getMessage();
+            return m.json();
         }
     }
 }

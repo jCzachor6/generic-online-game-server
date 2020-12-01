@@ -20,7 +20,6 @@ public class UserService implements GgsUserService<TttUser> {
             user.setId(tttUser.getId().toString());
             user.setUsername(tttUser.getUsername());
             user.setPassword(tttUser.getPassword());
-            user.setCriteria(new HashMap<>());
             return user;
         }).orElse(null);
     }
