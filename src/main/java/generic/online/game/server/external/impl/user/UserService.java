@@ -1,16 +1,15 @@
 package generic.online.game.server.external.impl.user;
 
-import generic.online.game.server.gogs.utils.GgsUserService;
+import generic.online.game.server.gogs.utils.GogsUserService;
 import generic.online.game.server.gogs.model.auth.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("userService")
-public class UserService implements GgsUserService<TttUser> {
+public class UserService implements GogsUserService<TttUser> {
     private final UserRepository userRepository;
 
     @Override

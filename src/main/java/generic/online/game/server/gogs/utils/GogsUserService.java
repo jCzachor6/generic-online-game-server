@@ -3,7 +3,7 @@ package generic.online.game.server.gogs.utils;
 import generic.online.game.server.gogs.model.auth.User;
 
 
-public interface GgsUserService<T> {
+public interface GogsUserService<T> {
     User map(T t);
 
     User getOneByUsername(String username);

@@ -6,4 +6,5 @@ import generic.online.game.server.gogs.model.queue.Queue;
 public interface SearchBehaviour {
     Queue getQueue();
     Queue onUserQueue(User user);
+    Queue onUserCancel(User user);
 }

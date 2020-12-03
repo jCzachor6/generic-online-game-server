@@ -6,6 +6,7 @@ import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.annotations.OnConnect;
 import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
+import generic.online.game.server.gogs.utils.annotations.RoomParameters;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import static generic.online.game.server.external.impl.game.TttRoomInitializer.E
 @Getter
 @Setter
 @ToString
+@RoomParameters
 public class TttRoom extends Room<TttMessage> {
     private List<Character> tiles; //n - none, x, o
     private User playerX;

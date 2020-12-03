@@ -41,7 +41,7 @@ public class CoordinatorRoom extends Room<CoordinatorMessage> {
     }
 
     @OnMessage("SEARCH")
-    public void onSearch(User user, CoordinatorMessage msg) {
+    public void onSearch(User user, CoordinatorMessage msg) throws ClassNotFoundException {
         Queue main = searchBehaviour.getQueue();
         Queue after = searchBehaviour.onUserQueue(user);
         if (WAITING.equals(after.getStatus())) {
@@ -53,7 +53,7 @@ public class CoordinatorRoom extends Room<CoordinatorMessage> {
         }
     }
 
-    private void decideAndCreateRoom(Set<User> users, Object additionalData) {
+    private void decideAndCreateRoom(Set<User> users, Object additionalData) throws ClassNotFoundException {
         String roomId = roomIdGenerator.generate();
         if (acceptBeforeStart) {
             RoomInitializerData data = new RoomInitializerData(roomId, users, getMessenger(), null);
@@ -69,11 +69,12 @@ public class CoordinatorRoom extends Room<CoordinatorMessage> {
     @OnMessage("CANCEL")
     public void onCancel(User user, CoordinatorMessage msg) {
         getMessenger().send(user, user, new CoordinatorMessage(CANCELED));
-        searchBehaviour.getQueue().remove(user);
+        searchBehaviour.onUserCancel(user);
+        searchBehaviour.getQueue();
     }
 
     @OnMessage("ACCEPT")
-    public void onAccept(User user, CoordinatorMessage msg) {
+    public void onAccept(User user, CoordinatorMessage msg) throws ClassNotFoundException {
         String uuid = msg.getRoomUUID();
         WaitingRoom room = waitingRooms.get(uuid);
         room.onAccept(user, msg);

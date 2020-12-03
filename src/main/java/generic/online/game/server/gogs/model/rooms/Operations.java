@@ -8,9 +8,7 @@ import java.util.Timer;
 public interface Operations {
     void closeRoom();
 
-    default Timer closeRoomAfterTime(int seconds) {
-        return new CloseRoomTimer(this).startCounting(seconds);
-    }
+    Timer closeRoomAfterTime(int seconds);
 
     Set<User> connectedUsers();
 }

@@ -36,4 +36,10 @@ public class SimpleSearch implements SearchBehaviour {
 
         return queue;
     }
+
+    @Override
+    public Queue onUserCancel(User user) {
+        queue.remove(user);
+        return queue;
+    }
 }

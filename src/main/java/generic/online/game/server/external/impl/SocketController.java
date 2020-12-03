@@ -16,7 +16,7 @@ public class SocketController {
     private final RoomManagementService managementService;
 
     @Autowired
-    public SocketController(RoomManagementService managementService) {
+    public SocketController(RoomManagementService managementService) throws ClassNotFoundException {
         this.managementService = managementService;
         this.managementService.addRoom("coordinator",
                 new HashSet<>(),

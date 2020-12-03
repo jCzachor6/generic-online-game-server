@@ -36,7 +36,7 @@ public class WaitingRoom extends Room<CoordinatorMessage> {
     }
 
     @OnMessage("ACCEPT")
-    public void onAccept(User user, CoordinatorMessage msg) {
+    public void onAccept(User user, CoordinatorMessage msg) throws ClassNotFoundException {
         this.acceptanceStatus.replace(user, true);
         if (allAccepted()) {
             this.managementService.addRoom(getRoomId(), getGameUsers(), roomInitializer, additionalData);
