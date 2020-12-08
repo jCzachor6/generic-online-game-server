@@ -1,8 +1,8 @@
 package generic.online.game.server.gogs.impl;
 
 import fixtures.UserFixture;
-import generic.online.game.server.gogs.model.queue.Queue;
-import generic.online.game.server.gogs.model.queue.QueueStatus;
+import generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.Queue;
+import generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.QueueStatus;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

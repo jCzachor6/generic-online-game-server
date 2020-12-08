@@ -3,12 +3,14 @@ package generic.online.game.server.gogs.model.rooms;
 import generic.online.game.server.gogs.api.GogsValidationException;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.socket.Message;
+import generic.online.game.server.gogs.utils.annotations.InternalRoom;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
 import generic.online.game.server.gogs.utils.annotations.RoomParameters;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.List;
@@ -49,9 +51,10 @@ public class AnnotationsValidatorService {
         validateDuplicates(methods);
         for (Method method : methods) {
             this.validateReturnParamVoid(method);
-            if (method.getParameterTypes().length != 2
+            if (method.getParameterCount() != 2
                     || method.getParameterTypes()[0] != User.class
-                    || method.getParameterTypes()[1].isAssignableFrom(Message.class)) {
+                    || Message.class.isAssignableFrom(method.getDeclaringClass())
+                    || !method.getParameterTypes()[1].getSuperclass().equals(Message.class)) {
                 throw new GogsValidationException(method.getName() + " should have only 'user' and 'message' param. ");
             }
         }
@@ -109,5 +112,25 @@ public class AnnotationsValidatorService {
             return allConnected < capacity - notConnectedSet.size();
         }
         return false;
+    }
+
+    public void validateInternalRoomFields(List<Field> fields) {
+        validateDuplicatedPrefixes(fields);
+        for (Field field : fields) {
+            if (!Room.class.isAssignableFrom(field.getDeclaringClass())) {
+                throw new GogsValidationException(field.getDeclaringClass() + " should extend from Room.class. ");
+            }
+        }
+    }
+
+    private void validateDuplicatedPrefixes(List<Field> fields) {
+        Set<String> uniques = new HashSet<>();
+        Set<String> duplicates = fields.stream()
+                .map(m -> m.getAnnotation(InternalRoom.class).prefix())
+                .filter(val -> !uniques.add(val))
+                .collect(Collectors.toSet());
+        if (duplicates.size() > 0) {
+            throw new GogsValidationException(StringUtils.join(duplicates, ", ") + " duplicated. ");
+        }
     }
 }

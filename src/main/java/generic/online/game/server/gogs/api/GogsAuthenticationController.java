@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping("/ggs/api/auth")
+@RequestMapping("/gogs/api/auth")
 public class GogsAuthenticationController {
     @Autowired
     private AuthenticationService service;

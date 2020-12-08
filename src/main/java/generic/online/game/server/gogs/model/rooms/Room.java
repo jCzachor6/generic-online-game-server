@@ -7,11 +7,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class Room<T extends Message> {
+public class Room {
+    Date createdOn = new Date();
     String roomId;
     Set<User> gameUsers;
     Messenger messenger;

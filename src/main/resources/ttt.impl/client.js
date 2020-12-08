@@ -25,7 +25,7 @@ function logout() {
 function login() {
     var username = $("#in-user").val();
     var password = $("#in-password").val();
-    axios.post('http://localhost:8080/ggs/api/auth/login', {username: username, password: password})
+    axios.post('http://localhost:8080/gogs/api/auth/login', {username: username, password: password})
         .then(function (response) {
             user = response.data;
             setupUser(user);
@@ -36,7 +36,7 @@ function login() {
 function register() {
     var username = $("#in-user").val();
     var password = $("#in-password").val();
-    axios.post('http://localhost:8080/ggs/api/auth/register', {username: username, password: password})
+    axios.post('http://localhost:8080/gogs/api/auth/register', {username: username, password: password})
         .then(function (response) {
             user = response.data;
             setupUser(user);
@@ -45,7 +45,7 @@ function register() {
 }
 
 function anonymous() {
-    axios.post('http://localhost:8080/ggs/api/auth/anonymous', {})
+    axios.post('http://localhost:8080/gogs/api/auth/anonymous', {})
         .then(function (response) {
             user = response.data;
             setupUser(user);

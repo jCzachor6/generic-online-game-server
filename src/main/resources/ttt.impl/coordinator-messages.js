@@ -37,11 +37,11 @@ function coordinatorCancelMessage() {
 }
 
 function coordinatorAcceptMessage() {
-    appSocket.emit('ACCEPT', {roomUUID: roomUUID});
+    appSocket.emit('ROOM-ACCEPT', {roomUUID: roomUUID});
 }
 
 function coordinatorDeclineMessage() {
-    appSocket.emit('DECLINE', {roomUUID: roomUUID});
+    appSocket.emit('ROOM-DECLINE', {roomUUID: roomUUID});
 }
 
 function coordinatorRequireAcceptHandler(msg) {

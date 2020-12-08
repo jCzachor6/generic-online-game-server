@@ -1,0 +1,60 @@
+package generic.online.game.server.gogs.impl.rooms.chatroom.utils;
+
+import generic.online.game.server.gogs.impl.rooms.chatroom.ChatMessage;
+import generic.online.game.server.gogs.model.auth.User;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static generic.online.game.server.gogs.impl.rooms.chatroom.ChatMessageType.*;
+
+public class MessageStore {
+    private final List<ChatMessage> messages;
+    private final int listSize;
+    private int id = 0;
+
+    public MessageStore(int maxSize, List<ChatMessage> initialMessages) {
+        messages = new ArrayList<>(initialMessages);
+        listSize = maxSize;
+    }
+
+    public ChatMessage add(User from, ChatMessage chatMessage) {
+        chatMessage.setFrom(from.getUsername());
+        chatMessage.setId(id++);
+        chatMessage.setCreatedOn(new Date());
+        chatMessage.setType(CONTENT);
+        if (listSize == messages.size()) {
+            messages.remove(messages.size() - 1);
+        }
+        messages.add(chatMessage);
+        return chatMessage;
+    }
+
+    public ChatMessage remove(User from, ChatMessage chatMessage) {
+        return messages.stream().filter(cm -> cm.getId() == chatMessage.getId())
+                .findFirst()
+                .map(msg -> {
+                    if (msg.getFrom().equals(from.getUsername())) {
+                        msg.setType(REMOVE);
+                        msg.setContent("");
+                    }
+                    return msg;
+                })
+                .orElse(chatMessage);
+    }
+
+    public ChatMessage edit(User from, ChatMessage chatMessage) {
+        return messages.stream().filter(cm -> cm.getId() == chatMessage.getId())
+                .findFirst()
+                .map(msg -> {
+                    if (msg.getFrom().equals(from.getUsername())) {
+                        msg.setType(EDIT);
+                        msg.setEditedOn(new Date());
+                        msg.setContent(chatMessage.getContent());
+                    }
+                    return msg;
+                })
+                .orElse(chatMessage);
+    }
+}

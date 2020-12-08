@@ -4,20 +4,21 @@ import generic.online.game.server.external.impl.game.TttRoomInitializer;
 import generic.online.game.server.gogs.api.service.RoomManagementService;
 import generic.online.game.server.gogs.impl.RoomUuidGenerator;
 import generic.online.game.server.gogs.impl.SimpleSearch;
-import generic.online.game.server.gogs.impl.rooms.coordinator.CoordinatorData;
-import generic.online.game.server.gogs.impl.rooms.coordinator.CoordinatorRoomInitializer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorData;
+import generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorRoomInitializer;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 
-@Controller
+@Configuration
+@RequiredArgsConstructor
 public class SocketController {
     private final RoomManagementService managementService;
 
-    @Autowired
-    public SocketController(RoomManagementService managementService) throws ClassNotFoundException {
-        this.managementService = managementService;
+    @PostConstruct
+    public void init() {
         this.managementService.addRoom("coordinator",
                 new HashSet<>(),
                 new CoordinatorRoomInitializer(),

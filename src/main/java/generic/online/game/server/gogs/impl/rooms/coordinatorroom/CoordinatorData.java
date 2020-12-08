@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.coordinator;
+package generic.online.game.server.gogs.impl.rooms.coordinatorroom;
 
 import generic.online.game.server.gogs.api.service.RoomManagementService;
 import generic.online.game.server.gogs.utils.RoomIdGenerator;

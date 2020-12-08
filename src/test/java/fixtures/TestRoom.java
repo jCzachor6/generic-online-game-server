@@ -10,7 +10,7 @@ import generic.online.game.server.gogs.utils.annotations.OnTick;
 import lombok.Getter;
 
 @Getter
-public class TestRoom extends Room<TestMessage> {
+public class TestRoom extends Room {
     int tickCount;
     int dtCount;
 

@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.coordinator;
+package generic.online.game.server.gogs.impl.rooms.coordinatorroom;
 
 import generic.online.game.server.gogs.model.socket.Message;
 import lombok.Data;

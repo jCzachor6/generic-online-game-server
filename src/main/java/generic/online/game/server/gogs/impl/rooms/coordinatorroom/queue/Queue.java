@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.model.queue;
+package generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue;
 
 import generic.online.game.server.gogs.model.auth.User;
 import lombok.Builder;
@@ -7,6 +7,8 @@ import lombok.Getter;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.QueueStatus.FOUND;
 
 @Builder
 @Getter
@@ -19,14 +21,14 @@ public class Queue {
     public Queue found(Set<User> users) {
         return Queue.builder()
                 .users(new HashSet<>(users))
-                .status(QueueStatus.FOUND)
+                .status(FOUND)
                 .build();
     }
 
     public Queue found(Set<User> users, Object additionalData) {
         return Queue.builder()
                 .users(new HashSet<>(users))
-                .status(QueueStatus.FOUND)
+                .status(FOUND)
                 .additionalData(additionalData)
                 .build();
     }
@@ -45,5 +47,9 @@ public class Queue {
 
     public int size() {
         return users.size();
+    }
+
+    public boolean found() {
+        return FOUND.equals(this.status);
     }
 }

@@ -18,11 +18,11 @@ public class Messenger {
         send(from.getToken(), to.getToken(), message);
     }
 
-    public void send(User from, Room<?> room, Message message) {
+    public void send(User from, Room room, Message message) {
         send(from.getToken(), room.getRoomId(), message);
     }
 
-    public void send(Collection<User> from, Room<?> room, Message message) {
+    public void send(Collection<User> from, Room room, Message message) {
         from.forEach(u -> send(u.getToken(), room.getRoomId(), message));
     }
 
@@ -34,7 +34,7 @@ public class Messenger {
         from.forEach(u -> send(u.getToken(), u.getToken(), message));
     }
 
-    public void sendToAll(Room<?> room, Message message) {
+    public void sendToAll(Room room, Message message) {
         room.getOperations().connectedUsers().forEach(u -> send(u.getToken(), room.getRoomId(), message));
     }
 }

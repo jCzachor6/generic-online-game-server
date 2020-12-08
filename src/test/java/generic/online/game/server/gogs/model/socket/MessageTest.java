@@ -27,7 +27,7 @@ public class MessageTest {
         subject.setTestContent("test");
         subject.setErrorMessage("ERROR");
         assertTrue(subject.isError());
-        assertEquals("{\"errorMessage\":\"ERROR\",\"testContent\":\"test\",\"error\":true}", subject.json());
+        assertEquals("{\"errorMessage\":\"ERROR\",\"testContent\":\"test\"}", subject.json());
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -41,7 +41,7 @@ public class MessageTest {
         TestMessage2 subject = new TestMessage2();
         subject.setErrorMessage("ERROR");
         assertTrue(subject.isError());
-        assertEquals("{\"errorMessage\":\"Direct self-reference leading to cycle (through reference chain: generic.online.game.server.gogs.model.socket.MessageTest$TestMessage2[\\\"testMessage2\\\"])\",\"error\":true}",
+        assertEquals("{\"errorMessage\":\"Direct self-reference leading to cycle (through reference chain: generic.online.game.server.gogs.model.socket.MessageTest$TestMessage2[\\\"testMessage2\\\"])\"}",
                 subject.json());
     }
 }

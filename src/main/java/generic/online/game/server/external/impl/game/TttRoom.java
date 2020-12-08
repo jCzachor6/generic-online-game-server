@@ -1,12 +1,15 @@
 package generic.online.game.server.external.impl.game;
 
+import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoom;
+import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoomData;
+import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoomInitializer;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
+import generic.online.game.server.gogs.utils.annotations.InternalRoom;
 import generic.online.game.server.gogs.utils.annotations.OnConnect;
 import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
-import generic.online.game.server.gogs.utils.annotations.RoomParameters;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +27,10 @@ import static generic.online.game.server.external.impl.game.TttRoomInitializer.E
 @Getter
 @Setter
 @ToString
-@RoomParameters
-public class TttRoom extends Room<TttMessage> {
+public class TttRoom extends Room {
+    @InternalRoom(prefix = "CHAT")
+    private final ChatRoom chatRoom;
+
     private List<Character> tiles; //n - none, x, o
     private User playerX;
     private User playerO;
@@ -37,6 +42,8 @@ public class TttRoom extends Room<TttMessage> {
 
     public TttRoom(RoomInitializerData data) {
         super(data);
+        ChatRoomData chatRoomData = new ChatRoomData(new ArrayList<>(50), 50, true);
+        chatRoom = (ChatRoom) new ChatRoomInitializer().initialize(data, chatRoomData);
     }
 
     @OnConnect

@@ -6,16 +6,14 @@ import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
 import generic.online.game.server.gogs.utils.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,11 +44,24 @@ public class AnnotationsScannerService {
         return methods;
     }
 
-    public void setOnTickListeners(AnnotationMethodsParams p, List<Timer> tickTimers) {
+    public Map<String, Room> gogsInnerRooms(Room room) throws IllegalAccessException {
+        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(room.getClass(), InternalRoom.class);
+        validatorService.validateInternalRoomFields(fields);
+        Map<String, Room> innerRooms = new HashMap<>();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            String key = f.getAnnotation(InternalRoom.class).prefix();
+            Room val = (Room) f.get(room);
+            innerRooms.put(key, val);
+        }
+        return innerRooms;
+    }
+
+    public void setOnTickListeners(AnnotationMethodsParams p) {
         for (Method m : p.getMethods()) {
             Optional.ofNullable(m.getAnnotation(OnTick.class)).ifPresent(om -> {
                 Timer timer = new TickRateTimer(m, p.getRoom()).startTicking(1000 / om.tickRate());
-                tickTimers.add(timer);
+                p.getRoomTimers().add(timer);
             });
         }
     }
@@ -64,13 +75,13 @@ public class AnnotationsScannerService {
             }
             client.set("user", user);
             p.getClientsMap().put(token, client);
-            if (p.getMethods().size() == 1) {
+            p.getOnConnect().forEach((r, m) -> {
                 try {
-                    p.getMethods().get(0).invoke(p.getRoom(), user);
+                    m.invoke(r, user);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            });
         });
     }
 
@@ -80,37 +91,31 @@ public class AnnotationsScannerService {
             User user = authenticationFilter.getUserFromToken(token);
             p.getClientsMap().remove(token);
             client.disconnect();
-            if (p.getMethods().size() == 1) {
+            p.getOnDisconnect().forEach((r, m) -> {
                 try {
-                    p.getMethods().get(0).invoke(p.getRoom(), user);
+                    m.invoke(r, user);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            });
         });
     }
 
-    public void setOnMessageListeners(AnnotationMethodsParams p) throws ClassNotFoundException {
-        Class msgClass = messageClass(p.getRoom());
+    public void setOnMessageListeners(AnnotationMethodsParams p) {
         p.getMethods().forEach(method -> {
-            String value = method.getAnnotation(OnMessage.class).value();
-            p.getNamespace().addEventListener(value, Object.class, onMessageDataListener(method, p.getRoom(), msgClass));
+            Class msgClass = method.getParameterTypes()[1];
+            String value = p.getEventPrefix() + method.getAnnotation(OnMessage.class).value();
+            p.getNamespace().addEventListener(value, msgClass, onMessageDataListener(method, p.getRoom(), msgClass));
         });
     }
 
-    private DataListener<Object> onMessageDataListener(Method m, Room<?> room, Class msgClass) {
+    private DataListener<Object> onMessageDataListener(Method m, Room room, Class msgClass) {
         return (client, message, ackReq) -> {
             if (message == null || client.getHandshakeData().getSingleUrlParam("token") == null) {
                 return;
             }
             m.invoke(room, client.get("user"), objectMapper.convertValue(message, msgClass));
         };
-    }
-
-    private Class<?> messageClass(Room<?> room) throws ClassNotFoundException {
-        String messageType = StringUtils.substringBetween(
-                room.getClass().getGenericSuperclass().getTypeName(), "<", ">");
-        return Class.forName(messageType);
     }
 
     public RoomParameters getRoomParameters(Room room) {

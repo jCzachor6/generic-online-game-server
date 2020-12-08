@@ -13,8 +13,7 @@ public class RoomFixture {
         String roomId = "testId";
         Set<User> users = Set.of(UserFixture.anonUser(), UserFixture.danyUser());
         Messenger messenger = new Messenger(null);
-        Operations operations = new OperationsFixture();
-        RoomInitializerData data = new RoomInitializerData(roomId, users, messenger, operations);
+        RoomInitializerData data = new RoomInitializerData(roomId, users, messenger).setOperations(new OperationsFixture());
         return new TestRoom(data);
     }
 }
