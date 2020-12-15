@@ -123,6 +123,12 @@ public class AnnotationsValidatorService {
         }
     }
 
+    public void validateNotEmpty(Class<?> annotation, String string) {
+        if (StringUtils.isEmpty(string)) {
+            throw new GogsValidationException(annotation.getName() + " has empty value. ");
+        }
+    }
+
     private void validateDuplicatedPrefixes(List<Field> fields) {
         Set<String> uniques = new HashSet<>();
         Set<String> duplicates = fields.stream()
@@ -131,6 +137,12 @@ public class AnnotationsValidatorService {
                 .collect(Collectors.toSet());
         if (duplicates.size() > 0) {
             throw new GogsValidationException(StringUtils.join(duplicates, ", ") + " duplicated. ");
+        }
+    }
+
+    public void validateTickRate(Method m, int tickRate) {
+        if (tickRate < 1) {
+            throw new GogsValidationException(m.getName() + " tick rate is lower than zero. ");
         }
     }
 }

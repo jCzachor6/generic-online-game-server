@@ -1,10 +1,10 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
 import generic.online.game.server.gogs.impl.RoomUuidGenerator;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.Queue;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.waitingroom.WaitingRoom;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.waitingroom.WaitingRoomData;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.waitingroom.WaitingRoomInitializer;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.Queue;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoom;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomData;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomInitializer;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
@@ -14,8 +14,8 @@ import generic.online.game.server.gogs.utils.annotations.OnMessage;
 
 import java.util.Set;
 
-import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorMessageType.CANCELED;
-import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorMessageType.SEARCHING;
+import static generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessageType.CANCELED;
+import static generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessageType.SEARCHING;
 
 public class CoordinatorRoom extends Room {
     private final OnGameFound onGameFound;

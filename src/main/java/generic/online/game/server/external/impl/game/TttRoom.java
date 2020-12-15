@@ -1,8 +1,8 @@
 package generic.online.game.server.external.impl.game;
 
-import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoom;
-import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoomData;
-import generic.online.game.server.gogs.impl.rooms.chatroom.ChatRoomInitializer;
+import generic.online.game.server.gogs.impl.rooms.chat_room.ChatRoom;
+import generic.online.game.server.gogs.impl.rooms.chat_room.ChatRoomData;
+import generic.online.game.server.gogs.impl.rooms.chat_room.ChatRoomInitializer;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
@@ -42,7 +42,7 @@ public class TttRoom extends Room {
 
     public TttRoom(RoomInitializerData data) {
         super(data);
-        ChatRoomData chatRoomData = new ChatRoomData(new ArrayList<>(50), 50, true);
+        ChatRoomData chatRoomData = new ChatRoomData(new ArrayList<>(50), 50);
         chatRoom = (ChatRoom) new ChatRoomInitializer().initialize(data, chatRoomData);
     }
 

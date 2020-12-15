@@ -1,10 +1,10 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.RoomInitializer;
 
-import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorMessageType.FOUND;
+import static generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessageType.FOUND;
 
 public class CoordinatorRoomInitializer implements RoomInitializer<CoordinatorData> {
 

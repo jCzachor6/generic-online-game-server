@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
 public enum CoordinatorMessageType {
     SEARCHING,

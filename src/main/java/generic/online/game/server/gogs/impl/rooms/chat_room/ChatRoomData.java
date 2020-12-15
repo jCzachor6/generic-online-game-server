@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.chatroom;
+package generic.online.game.server.gogs.impl.rooms.chat_room;
 
 import lombok.Value;
 
@@ -8,5 +8,4 @@ import java.util.List;
 public class ChatRoomData {
     List<ChatMessage> messages;
     int listSize;
-    boolean profanityFilter;
 }

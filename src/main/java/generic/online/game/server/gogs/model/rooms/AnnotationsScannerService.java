@@ -51,6 +51,7 @@ public class AnnotationsScannerService {
         for (Field f : fields) {
             f.setAccessible(true);
             String key = f.getAnnotation(InternalRoom.class).prefix();
+            validatorService.validateNotEmpty(InternalRoom.class, key);
             Room val = (Room) f.get(room);
             innerRooms.put(key, val);
         }
@@ -60,6 +61,7 @@ public class AnnotationsScannerService {
     public void setOnTickListeners(AnnotationMethodsParams p) {
         for (Method m : p.getMethods()) {
             Optional.ofNullable(m.getAnnotation(OnTick.class)).ifPresent(om -> {
+                validatorService.validateTickRate(m, om.tickRate());
                 Timer timer = new TickRateTimer(m, p.getRoom()).startTicking(1000 / om.tickRate());
                 p.getRoomTimers().add(timer);
             });

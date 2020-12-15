@@ -4,8 +4,8 @@ import generic.online.game.server.external.impl.game.TttRoomInitializer;
 import generic.online.game.server.gogs.api.service.RoomManagementService;
 import generic.online.game.server.gogs.impl.RoomUuidGenerator;
 import generic.online.game.server.gogs.impl.SimpleSearch;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorData;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorRoomInitializer;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorData;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorRoomInitializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 

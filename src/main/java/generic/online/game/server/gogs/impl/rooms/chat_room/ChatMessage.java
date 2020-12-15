@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.chatroom;
+package generic.online.game.server.gogs.impl.rooms.chat_room;
 
 import generic.online.game.server.gogs.model.socket.Message;
 import lombok.Data;

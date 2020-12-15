@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom.waitingroom;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom;
 
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;

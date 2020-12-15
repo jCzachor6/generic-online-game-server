@@ -1,7 +1,7 @@
 package fixtures;
 
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.Queue;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.QueueStatus;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.Queue;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.QueueStatus;
 import generic.online.game.server.gogs.model.auth.User;
 
 import java.util.HashSet;

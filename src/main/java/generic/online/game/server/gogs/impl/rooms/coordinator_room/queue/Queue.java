@@ -1,4 +1,4 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room.queue;
 
 import generic.online.game.server.gogs.model.auth.User;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
 
-import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.queue.QueueStatus.FOUND;
+import static generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.QueueStatus.FOUND;
 
 @Builder
 @Getter

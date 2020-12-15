@@ -1,7 +1,7 @@
-package generic.online.game.server.gogs.impl.rooms.coordinatorroom.waitingroom;
+package generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom;
 
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorMessage;
-import generic.online.game.server.gogs.impl.rooms.coordinatorroom.OnGameFound;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessage;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.OnGameFound;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static generic.online.game.server.gogs.impl.rooms.coordinatorroom.CoordinatorMessageType.*;
+import static generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessageType.*;
 
 public class WaitingRoom extends Room {
     private final OnGameFound onGameFound;

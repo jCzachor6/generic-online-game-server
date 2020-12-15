@@ -1,13 +1,13 @@
-package generic.online.game.server.gogs.impl.rooms.chatroom.utils;
+package generic.online.game.server.gogs.impl.rooms.chat_room.utils;
 
-import generic.online.game.server.gogs.impl.rooms.chatroom.ChatMessage;
+import generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessage;
 import generic.online.game.server.gogs.model.auth.User;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static generic.online.game.server.gogs.impl.rooms.chatroom.ChatMessageType.*;
+import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageType.*;
 
 public class MessageStore {
     private final List<ChatMessage> messages;
