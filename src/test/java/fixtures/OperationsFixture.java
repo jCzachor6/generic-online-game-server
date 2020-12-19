@@ -19,6 +19,6 @@ public class OperationsFixture implements Operations {
 
     @Override
     public Set<User> connectedUsers() {
-        return Set.of(UserFixture.anonUser(), UserFixture.danyUser());
+        return UserFixture.twoUsers();
     }
 }

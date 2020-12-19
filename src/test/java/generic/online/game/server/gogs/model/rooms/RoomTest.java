@@ -17,7 +17,7 @@ public class RoomTest {
     @Test
     public void shouldReturnSameFields() {
         String roomId = "testId";
-        Set<User> users = Set.of(UserFixture.anonUser(), UserFixture.danyUser());
+        Set<User> users = UserFixture.twoUsers();
         Messenger messenger = new Messenger(null);
         Operations operations = new OperationsFixture();
         RoomInitializerData data = new RoomInitializerData(roomId, users, messenger).setOperations(operations);

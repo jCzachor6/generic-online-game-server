@@ -1,11 +1,12 @@
 package generic.online.game.server.gogs.api.service;
 
-import com.corundumstudio.socketio.ClientOperations;
-import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
 import generic.online.game.server.gogs.model.auth.User;
-import generic.online.game.server.gogs.model.rooms.*;
+import generic.online.game.server.gogs.model.rooms.AnnotationMethodsParams;
+import generic.online.game.server.gogs.model.rooms.AnnotationsScannerService;
+import generic.online.game.server.gogs.model.rooms.Room;
+import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.RoomInitializer;
 import generic.online.game.server.gogs.utils.annotations.*;
 import generic.online.game.server.gogs.utils.settings.SocketSettings;
@@ -86,6 +87,6 @@ public class RoomManagementService {
     public Set<User> getUsers() {
         return rooms.stream()
                 .flatMap(r -> r.getGameUsers().stream())
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toSet());
     }
 }
