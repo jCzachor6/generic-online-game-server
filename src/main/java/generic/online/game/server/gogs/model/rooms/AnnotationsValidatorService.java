@@ -21,7 +21,6 @@ import static generic.online.game.server.gogs.utils.annotations.RoomParameters.C
 import static generic.online.game.server.gogs.utils.annotations.RoomParameters.CAPACITY_PRESET_USERS;
 
 @Service
-@RequiredArgsConstructor
 public class AnnotationsValidatorService {
     public void validateOnConnectMethods(List<Method> methods) {
         if (methods.size() > 1) {

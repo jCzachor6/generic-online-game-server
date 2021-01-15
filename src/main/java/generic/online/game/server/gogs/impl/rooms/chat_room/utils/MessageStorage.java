@@ -9,12 +9,12 @@ import java.util.List;
 
 import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageType.*;
 
-public class MessageStore {
+public class MessageStorage {
     private final List<ChatMessage> messages;
     private final int listSize;
     private int id = 0;
 
-    public MessageStore(int maxSize, List<ChatMessage> initialMessages) {
+    public MessageStorage(int maxSize, List<ChatMessage> initialMessages) {
         messages = new ArrayList<>(initialMessages);
         listSize = maxSize;
     }

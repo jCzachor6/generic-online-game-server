@@ -1,6 +1,6 @@
 package generic.online.game.server.gogs.impl.rooms.chat_room;
 
-import generic.online.game.server.gogs.impl.rooms.chat_room.utils.MessageStore;
+import generic.online.game.server.gogs.impl.rooms.chat_room.utils.MessageStorage;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
@@ -12,11 +12,11 @@ import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageTy
 
 @RoomParameters(capacity = -1)
 public class ChatRoom extends Room {
-    private final MessageStore messageStore;
+    private final MessageStorage messageStorage;
 
     public ChatRoom(RoomInitializerData initializerData, ChatRoomData roomData) {
         super(initializerData);
-        messageStore = new MessageStore(roomData.getListSize(), roomData.getMessages());
+        messageStorage = new MessageStorage(roomData.getListSize(), roomData.getMessages());
     }
 
     @OnConnect
@@ -39,16 +39,16 @@ public class ChatRoom extends Room {
 
     @OnMessage("ADD")
     public void onAdd(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStore.add(user, message));
+        getMessenger().sendToAll(this, messageStorage.add(user, message));
     }
 
     @OnMessage("EDIT")
     public void onEdit(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStore.edit(user, message));
+        getMessenger().sendToAll(this, messageStorage.edit(user, message));
     }
 
     @OnMessage("REMOVE")
     public void onRemove(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStore.remove(user, message));
+        getMessenger().sendToAll(this, messageStorage.remove(user, message));
     }
 }

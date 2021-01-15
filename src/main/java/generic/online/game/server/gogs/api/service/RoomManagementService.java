@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomManagementService {
     private final List<Room> rooms = new ArrayList<>();
+
     private final SocketIOServer server;
     private final SocketSettings socketSettings;
     private final AnnotationsScannerService annotationsService;
@@ -32,11 +33,7 @@ public class RoomManagementService {
         Room room = roomInitializer.initialize(data, additionalData);
         SocketIONamespace namespace = server.addNamespace(socketSettings.getNamespace() + "/" + roomId);
         RoomParameters parameters = annotationsService.getRoomParameters(room);
-
-        AnnotationMethodsParams methodsParams = new AnnotationMethodsParams(data, namespace, room, parameters);
-        setupListeners(methodsParams);
-        annotationsService.setUserConnectListener(methodsParams);
-        annotationsService.setUserDisconnectListener(methodsParams);
+        setupListeners(new AnnotationMethodsParams(data, namespace, room, parameters));
         rooms.add(room);
     }
 
@@ -51,7 +48,7 @@ public class RoomManagementService {
             mp.getOnConnect().put(mp.getRoom(), onConnect.get(0));
         }
         List<Method> onDisconnect = annotated.get(OnDisconnect.class);
-        if (onConnect.size() == 1) {
+        if (onDisconnect.size() == 1) {
             mp.getOnDisconnect().put(mp.getRoom(), onDisconnect.get(0));
         }
 
@@ -66,18 +63,16 @@ public class RoomManagementService {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+        annotationsService.setUserConnectListener(mp);
+        annotationsService.setUserDisconnectListener(mp);
     }
 
     public void removeRoom(String roomId) {
-        rooms.stream().filter(r -> r.getRoomId().equals(roomId)).findFirst().ifPresent((room) -> {
-            room.getOperations().closeRoom();
-        });
+        rooms.stream().filter(r -> r.getRoomId().equals(roomId)).findFirst().ifPresent((room) -> room.getOperations().closeRoom());
     }
 
     public void removeRoom(String roomId, int seconds) {
-        rooms.stream().filter(r -> r.getRoomId().equals(roomId)).findFirst().ifPresent((room) -> {
-            room.getOperations().closeRoomAfterTime(seconds);
-        });
+        rooms.stream().filter(r -> r.getRoomId().equals(roomId)).findFirst().ifPresent((room) -> room.getOperations().closeRoomAfterTime(seconds));
     }
 
     public List<Room> getRooms() {
