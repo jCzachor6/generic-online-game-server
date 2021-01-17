@@ -2,6 +2,7 @@ package generic.online.game.server.gogs.model.rooms;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import generic.online.game.server.gogs.impl.rooms.dynamic_room_list.DynamicRoomListOperations;
 import generic.online.game.server.gogs.model.auth.User;
 import generic.online.game.server.gogs.model.socket.Messenger;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class RoomInitializerData {
     private final Messenger messenger;
     private final List<Timer> roomTimers;
     private Operations operations;
+    private DynamicRoomListOperations dynamicRoomListOperations;
 
     public RoomInitializerData(String roomId, Set<User> users, Messenger messenger) {
         this.clientsMap = new ConcurrentHashMap<>(users.size());
@@ -36,5 +38,9 @@ public class RoomInitializerData {
     public RoomInitializerData setOperations(Operations operations) {
         this.operations = operations;
         return this;
+    }
+
+    public void setRoomListOperations(DynamicRoomListOperations roomListOperations) {
+        this.dynamicRoomListOperations = roomListOperations;
     }
 }

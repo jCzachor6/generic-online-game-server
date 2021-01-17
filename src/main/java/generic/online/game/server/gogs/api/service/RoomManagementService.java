@@ -27,7 +27,7 @@ public class RoomManagementService {
     private final SocketSettings socketSettings;
     private final AnnotationsScannerService annotationsService;
 
-    public void addRoom(String roomId, Set<User> users, RoomInitializer roomInitializer, Object additionalData) {
+    public Room addRoom(String roomId, Set<User> users, RoomInitializer roomInitializer, Object additionalData) {
         RoomInitializerData data = new RoomInitializerData(roomId, users, null)
                 .setOperations(socketSettings.getNamespace(), server, rooms);
         Room room = roomInitializer.initialize(data, additionalData);
@@ -35,6 +35,7 @@ public class RoomManagementService {
         RoomParameters parameters = annotationsService.getRoomParameters(room);
         setupListeners(new AnnotationMethodsParams(data, namespace, room, parameters));
         rooms.add(room);
+        return room;
     }
 
     private void setupListeners(AnnotationMethodsParams mp) {

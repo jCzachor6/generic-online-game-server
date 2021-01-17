@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.github.jczachor6</groupId>
     <artifactId>generic-online-game-server</artifactId>
-    <version>1.0.4</version>
+    <version>1.1.4</version>
 
     <name>Generic online game server</name>
     <url>https://github.com/jCzachor6/generic-online-game-server</url>
