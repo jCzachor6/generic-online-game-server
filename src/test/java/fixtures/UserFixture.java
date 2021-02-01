@@ -1,7 +1,8 @@
 package fixtures;
 
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,14 +15,10 @@ public class UserFixture {
     }
 
     public static User anonUser() {
-        User user = new User();
-        user.setId("1");
-        return user;
+        return new User("token1", "aab", "1", "user1", new ArrayList<>());
     }
 
     public static User danyUser() {
-        User user = new User();
-        user.setId("2");
-        return user;
+        return new User("token2", "aac", "2", "user2", new ArrayList<>());
     }
 }

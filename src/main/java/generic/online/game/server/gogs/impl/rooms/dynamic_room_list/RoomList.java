@@ -1,7 +1,7 @@
 package generic.online.game.server.gogs.impl.rooms.dynamic_room_list;
 
 import generic.online.game.server.gogs.api.service.RoomManagementService;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.annotations.OnConnect;

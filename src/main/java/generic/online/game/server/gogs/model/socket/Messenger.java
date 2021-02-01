@@ -1,15 +1,13 @@
 package generic.online.game.server.gogs.model.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Map;
 
-@Component
 @RequiredArgsConstructor
 public class Messenger {
     private final Map<String, SocketIOClient> clientsMap;

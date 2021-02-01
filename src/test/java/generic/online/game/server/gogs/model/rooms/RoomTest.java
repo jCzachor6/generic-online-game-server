@@ -2,7 +2,7 @@ package generic.online.game.server.gogs.model.rooms;
 
 import fixtures.OperationsFixture;
 import fixtures.UserFixture;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.socket.Messenger;
 import org.junit.Test;
 

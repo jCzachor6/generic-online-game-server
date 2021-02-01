@@ -1,7 +1,7 @@
 package generic.online.game.server.gogs.impl.rooms.chat_room.utils;
 
 import generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessage;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,14 +1,13 @@
 package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
-import generic.online.game.server.gogs.impl.RoomUuidGenerator;
+import generic.online.game.server.gogs.model.rooms.UuidGenerator;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.Queue;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoom;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomData;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomInitializer;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
-import generic.online.game.server.gogs.utils.SearchBehaviour;
 import generic.online.game.server.gogs.utils.annotations.InternalRoom;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
 
@@ -56,7 +55,7 @@ public class CoordinatorRoom extends Room {
 
     private void decideAndCreateRoom(Set<User> users, Object additionalData) {
         if (acceptBeforeStart) {
-            String id = new RoomUuidGenerator().generate();
+            String id = new UuidGenerator(5).generate();
             waitingRoom.newAwait(id, users, additionalData);
         } else {
             onGameFound.create(users, additionalData);

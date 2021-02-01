@@ -2,14 +2,14 @@ package generic.online.game.server.gogs.api.service;
 
 import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.GogsConfig;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.AnnotationMethodsParams;
 import generic.online.game.server.gogs.model.rooms.AnnotationsScannerService;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
 import generic.online.game.server.gogs.utils.RoomInitializer;
 import generic.online.game.server.gogs.utils.annotations.*;
-import generic.online.game.server.gogs.utils.settings.SocketSettings;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +24,17 @@ public class RoomManagementService {
     private final List<Room> rooms = new ArrayList<>();
 
     private final SocketIOServer server;
-    private final SocketSettings socketSettings;
+    private final GogsConfig gogsConfig;
     private final AnnotationsScannerService annotationsService;
 
     public Room addRoom(String roomId, Set<User> users, RoomInitializer roomInitializer, Object additionalData) {
+        String namespace = gogsConfig.wsServerNamespace;
         RoomInitializerData data = new RoomInitializerData(roomId, users, null)
-                .setOperations(socketSettings.getNamespace(), server, rooms);
+                .setOperations(namespace, server, rooms);
         Room room = roomInitializer.initialize(data, additionalData);
-        SocketIONamespace namespace = server.addNamespace(socketSettings.getNamespace() + "/" + roomId);
+        SocketIONamespace IOnamespace = server.addNamespace(namespace + "/" + roomId);
         RoomParameters parameters = annotationsService.getRoomParameters(room);
-        setupListeners(new AnnotationMethodsParams(data, namespace, room, parameters));
+        setupListeners(new AnnotationMethodsParams(data, IOnamespace, room, parameters));
         rooms.add(room);
         return room;
     }

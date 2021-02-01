@@ -1,12 +1,11 @@
 package generic.online.game.server.gogs.model.rooms;
 
-import generic.online.game.server.gogs.api.GogsValidationException;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.exception.GogsValidationException;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.socket.Message;
 import generic.online.game.server.gogs.utils.annotations.InternalRoom;
 import generic.online.game.server.gogs.utils.annotations.OnMessage;
 import generic.online.game.server.gogs.utils.annotations.RoomParameters;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

@@ -2,12 +2,13 @@ package generic.online.game.server.gogs.model.rooms;
 
 import com.corundumstudio.socketio.listener.DataListener;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import generic.online.game.server.gogs.model.auth.User;
-import generic.online.game.server.gogs.model.auth.jwt.JwtAuthenticationFilter;
+import generic.online.game.server.gogs.api.auth.jwt.JwtAuthenticationFilter;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.utils.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
@@ -71,7 +72,7 @@ public class AnnotationsScannerService {
     public void setUserConnectListener(AnnotationMethodsParams p) {
         p.getNamespace().addConnectListener(client -> {
             String token = client.getHandshakeData().getSingleUrlParam("token");
-            User user = authenticationFilter.getUserFromToken(token);
+            User user = authenticationFilter.getUser(token);
             if (!validatorService.validateConnect(user, p)) {
                 return;
             }
@@ -90,7 +91,7 @@ public class AnnotationsScannerService {
     public void setUserDisconnectListener(AnnotationMethodsParams p) {
         p.getNamespace().addDisconnectListener(client -> {
             String token = client.getHandshakeData().getSingleUrlParam("token");
-            User user = authenticationFilter.getUserFromToken(token);
+            User user = authenticationFilter.getUser(token);
             p.getClientsMap().remove(token);
             client.disconnect();
             p.getOnDisconnect().forEach((r, m) -> {

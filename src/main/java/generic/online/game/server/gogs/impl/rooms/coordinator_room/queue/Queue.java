@@ -1,6 +1,6 @@
 package generic.online.game.server.gogs.impl.rooms.coordinator_room.queue;
 
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

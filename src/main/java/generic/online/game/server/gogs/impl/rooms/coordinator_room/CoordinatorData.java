@@ -1,9 +1,8 @@
 package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
 import generic.online.game.server.gogs.api.service.RoomManagementService;
-import generic.online.game.server.gogs.utils.RoomIdGenerator;
+import generic.online.game.server.gogs.model.rooms.UuidGenerator;
 import generic.online.game.server.gogs.utils.RoomInitializer;
-import generic.online.game.server.gogs.utils.SearchBehaviour;
 import lombok.Value;
 
 @Value
@@ -15,5 +14,5 @@ public class CoordinatorData {
     int maximumAcceptTime;
 
     SearchBehaviour searchBehaviour;
-    RoomIdGenerator roomIdGenerator;
+    UuidGenerator roomIdGenerator;
 }

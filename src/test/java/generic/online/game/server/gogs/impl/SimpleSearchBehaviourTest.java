@@ -1,6 +1,7 @@
 package generic.online.game.server.gogs.impl;
 
 import fixtures.UserFixture;
+import generic.online.game.server.gogs.impl.rooms.coordinator_room.SimpleSearch;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.Queue;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.QueueStatus;
 import org.junit.Test;

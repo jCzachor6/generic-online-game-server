@@ -1,7 +1,7 @@
 package generic.online.game.server.gogs.model.rooms;
 
 import generic.online.game.server.gogs.impl.rooms.dynamic_room_list.DynamicRoomListOperations;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.socket.Messenger;
 import lombok.AccessLevel;
 import lombok.Getter;

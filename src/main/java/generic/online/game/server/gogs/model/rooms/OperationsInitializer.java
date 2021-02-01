@@ -2,7 +2,7 @@ package generic.online.game.server.gogs.model.rooms;
 
 import com.corundumstudio.socketio.ClientOperations;
 import com.corundumstudio.socketio.SocketIOServer;
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 
 import java.util.List;
 import java.util.Set;

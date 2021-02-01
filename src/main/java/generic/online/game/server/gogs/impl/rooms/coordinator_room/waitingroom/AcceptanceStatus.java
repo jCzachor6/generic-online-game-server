@@ -1,6 +1,6 @@
 package generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom;
 
-import generic.online.game.server.gogs.model.auth.User;
+import generic.online.game.server.gogs.api.auth.model.User;
 import lombok.Getter;
 
 import java.util.Map;
