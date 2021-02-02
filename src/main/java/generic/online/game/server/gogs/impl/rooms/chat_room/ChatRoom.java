@@ -1,17 +1,23 @@
 package generic.online.game.server.gogs.impl.rooms.chat_room;
 
-import generic.online.game.server.gogs.impl.rooms.chat_room.utils.MessageStorage;
 import generic.online.game.server.gogs.api.auth.model.User;
+import generic.online.game.server.gogs.impl.rooms.chat_room.utils.MessageStorage;
 import generic.online.game.server.gogs.model.rooms.Room;
+import generic.online.game.server.gogs.model.rooms.RoomContext;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
-import generic.online.game.server.gogs.utils.annotations.*;
+import generic.online.game.server.gogs.utils.interfaces.OnConnect;
+import generic.online.game.server.gogs.utils.interfaces.OnDisconnect;
+import generic.online.game.server.gogs.utils.interfaces.RoomParameters;
+import io.javalin.plugin.json.JavalinJson;
 
 import java.util.Date;
 
-import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageType.*;
+import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageType.JOIN;
+import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageType.LEAVE;
 
-@RoomParameters(capacity = -1)
-public class ChatRoom extends Room {
+public class ChatRoom extends Room implements OnConnect, OnDisconnect {
+    private static final Class<ChatMessage> CHAT_MSG_CLASS = ChatMessage.class;
+
     private final MessageStorage messageStorage;
 
     public ChatRoom(RoomInitializerData initializerData, ChatRoomData roomData) {
@@ -19,7 +25,6 @@ public class ChatRoom extends Room {
         messageStorage = new MessageStorage(roomData.getListSize(), roomData.getMessages());
     }
 
-    @OnConnect
     public void onConnect(User user) {
         ChatMessage message = new ChatMessage();
         message.setFrom(user.getUsername());
@@ -28,7 +33,6 @@ public class ChatRoom extends Room {
         getMessenger().sendToAll(this, message);
     }
 
-    @OnDisconnect
     public void onDisconnect(User user) {
         ChatMessage message = new ChatMessage();
         message.setFrom(user.getUsername());
@@ -37,18 +41,30 @@ public class ChatRoom extends Room {
         getMessenger().sendToAll(this, message);
     }
 
-    @OnMessage("ADD")
-    public void onAdd(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStorage.add(user, message));
+    @Override
+    public void handlers(RoomContext ctx) {
+        ctx.onMessage("ADD", this::handleAddMessage);
+        ctx.onMessage("EDIT", this::handleEditMessage);
+        ctx.onMessage("REMOVE", this::handleRemoveMessage);
     }
 
-    @OnMessage("EDIT")
-    public void onEdit(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStorage.edit(user, message));
+    private void handleRemoveMessage(User user, String body) {
+        ChatMessage msg = messageStorage.remove(user, JavalinJson.fromJson(body, CHAT_MSG_CLASS));
+        getMessenger().sendToAll(this, msg);
     }
 
-    @OnMessage("REMOVE")
-    public void onRemove(User user, ChatMessage message) {
-        getMessenger().sendToAll(this, messageStorage.remove(user, message));
+    private void handleEditMessage(User user, String body) {
+        ChatMessage msg = messageStorage.edit(user, JavalinJson.fromJson(body, CHAT_MSG_CLASS));
+        getMessenger().sendToAll(this, msg);
+    }
+
+    private void handleAddMessage(User user, String body) {
+        ChatMessage msg = messageStorage.add(user, JavalinJson.fromJson(body, CHAT_MSG_CLASS));
+        getMessenger().sendToAll(this, msg);
+    }
+
+    @Override
+    public int capacity() {
+        return RoomParameters.CAPACITY_ANYONE;
     }
 }

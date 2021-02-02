@@ -2,15 +2,14 @@ package fixtures;
 
 import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.Room;
+import generic.online.game.server.gogs.model.rooms.RoomContext;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
-import generic.online.game.server.gogs.utils.annotations.OnConnect;
-import generic.online.game.server.gogs.utils.annotations.OnDisconnect;
-import generic.online.game.server.gogs.utils.annotations.OnMessage;
-import generic.online.game.server.gogs.utils.annotations.OnTick;
+import generic.online.game.server.gogs.utils.interfaces.OnConnect;
+import generic.online.game.server.gogs.utils.interfaces.OnDisconnect;
 import lombok.Getter;
 
 @Getter
-public class TestRoom extends Room {
+public class TestRoom extends Room implements OnConnect, OnDisconnect {
     int tickCount;
     int dtCount;
 
@@ -18,29 +17,29 @@ public class TestRoom extends Room {
         super(data);
     }
 
-    @OnTick(tickRate = 3)
+    @Override
+    public void handlers(RoomContext ctx) {
+        ctx.onTick(3L, this::tick);
+        ctx.onMessage("MESSAGE", this::onMessage);
+        ctx.onMessage("MESSAGE2", this::onMessage);
+    }
+
     public void tick(long dt) {
         tickCount++;
         dtCount += dt;
     }
 
-    @OnConnect
+    @Override
     public void onConnect(User u) {
 
     }
 
-    @OnDisconnect
+    @Override
     public void onDisconnect(User u) {
 
     }
 
-    @OnMessage(value = "MESSAGE")
-    public void onMessage(User u, TestMessage m) {
-
-    }
-
-    @OnMessage(value = "MESSAGE2")
-    public void onMessage2(User u, TestMessage m) {
+    public void onMessage(User u, String m) {
 
     }
 

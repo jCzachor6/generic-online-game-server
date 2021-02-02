@@ -1,11 +1,9 @@
 package generic.online.game.server.gogs.api.auth;
 
 import generic.online.game.server.gogs.api.auth.model.AuthResponse;
-import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.api.auth.service.AnonymousUserService;
 import io.javalin.Javalin;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;

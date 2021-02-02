@@ -1,10 +1,10 @@
 package generic.online.game.server.gogs.impl.rooms.dynamic_room_list;
 
-import generic.online.game.server.gogs.api.service.RoomManagementService;
 import generic.online.game.server.gogs.api.auth.model.User;
+import generic.online.game.server.gogs.api.service.RoomManagementService;
+import generic.online.game.server.gogs.utils.interfaces.OnConnect;
 import generic.online.game.server.gogs.model.rooms.Room;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
-import generic.online.game.server.gogs.utils.annotations.OnConnect;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static generic.online.game.server.gogs.impl.rooms.dynamic_room_list.RoomListState.*;
 
-public class RoomList extends Room implements DynamicRoomListOperations {
+public class RoomList extends Room implements DynamicRoomListOperations, OnConnect {
     private final RoomManagementService service;
     private final Predicate<? super Room> filter;
     private final Function<? super Room, ?> mapper;
@@ -30,7 +30,6 @@ public class RoomList extends Room implements DynamicRoomListOperations {
         filter = roomFilter;
     }
 
-    @OnConnect
     public void onConnect(User user) {
         List<?> filtered = this.service.getRooms().stream()
                 .filter(filter)

@@ -1,9 +1,10 @@
 package generic.online.game.server.gogs.impl.rooms.chat_room.utils;
 
-import generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessage;
 import generic.online.game.server.gogs.api.auth.model.User;
+import generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessage;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -12,10 +13,11 @@ import static generic.online.game.server.gogs.impl.rooms.chat_room.ChatMessageTy
 public class MessageStorage {
     private final List<ChatMessage> messages;
     private final int listSize;
-    private int id = 0;
+    private int id;
 
     public MessageStorage(int maxSize, List<ChatMessage> initialMessages) {
         messages = new ArrayList<>(initialMessages);
+        id = messages.stream().max(Comparator.comparingInt(ChatMessage::getId)).map(ChatMessage::getId).orElse(0);
         listSize = maxSize;
     }
 

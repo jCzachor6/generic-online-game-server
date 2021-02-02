@@ -1,16 +1,16 @@
 package generic.online.game.server.gogs.impl.rooms.coordinator_room;
 
-import generic.online.game.server.gogs.model.rooms.UuidGenerator;
+import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.queue.Queue;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoom;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomData;
 import generic.online.game.server.gogs.impl.rooms.coordinator_room.waitingroom.WaitingRoomInitializer;
-import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.model.rooms.Room;
+import generic.online.game.server.gogs.model.rooms.RoomContext;
 import generic.online.game.server.gogs.model.rooms.RoomInitializerData;
-import generic.online.game.server.gogs.utils.annotations.InternalRoom;
-import generic.online.game.server.gogs.utils.annotations.OnMessage;
+import generic.online.game.server.gogs.model.rooms.UuidGenerator;
 
+import java.util.Map;
 import java.util.Set;
 
 import static generic.online.game.server.gogs.impl.rooms.coordinator_room.CoordinatorMessageType.CANCELED;
@@ -21,7 +21,6 @@ public class CoordinatorRoom extends Room {
     private final boolean acceptBeforeStart;
     private final SearchBehaviour searchBehaviour;
 
-    @InternalRoom(prefix = "ROOM")
     private final WaitingRoom waitingRoom;
 
     public CoordinatorRoom(RoomInitializerData initializerData, OnGameFound onGameFound,
@@ -34,8 +33,18 @@ public class CoordinatorRoom extends Room {
         this.waitingRoom = (WaitingRoom) new WaitingRoomInitializer().initialize(initializerData, data);
     }
 
-    @OnMessage("SEARCH")
-    public void onSearch(User user, CoordinatorMessage msg) {
+    @Override
+    public void internalRooms(Map<String, Room> map) {
+        map.put("ROOM", this.waitingRoom);
+    }
+
+    @Override
+    public void handlers(RoomContext ctx) {
+        ctx.onMessage("SEARCH", this::handleSearchMessage);
+        ctx.onMessage("CANCEL", this::handleCancelMessage);
+    }
+
+    private void handleSearchMessage(User user, String body) {
         Queue main = searchBehaviour.getQueue();
         Queue after = searchBehaviour.onUserQueue(user);
         if (!after.found()) {
@@ -47,8 +56,7 @@ public class CoordinatorRoom extends Room {
         }
     }
 
-    @OnMessage("CANCEL")
-    public void onCancel(User user, CoordinatorMessage msg) {
+    private void handleCancelMessage(User user, String s) {
         getMessenger().send(user, user, new CoordinatorMessage(CANCELED));
         searchBehaviour.onUserCancel(user);
     }

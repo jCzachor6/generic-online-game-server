@@ -5,6 +5,7 @@ import generic.online.game.server.gogs.api.auth.model.AuthResponse;
 import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.api.auth.service.AuthenticationService;
 import io.javalin.Javalin;
+import io.javalin.plugin.json.JavalinJson;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jetty.http.HttpStatus;

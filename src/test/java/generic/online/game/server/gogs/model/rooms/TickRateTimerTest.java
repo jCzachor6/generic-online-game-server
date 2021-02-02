@@ -18,7 +18,7 @@ public class TickRateTimerTest {
     public void shouldCallTickMethod() {
         TestRoom testRoom = RoomFixture.testing();
         Method m = MethodUtils.getMatchingMethod(TestRoom.class, "tick", long.class);
-        Timer subject = new TickRateTimer(m, testRoom).startTicking(1000 / 3);
+        Timer subject = new TickRateTimer(testRoom::tick).startTicking(1000 / 3);
         Thread.sleep(850);
         subject.cancel();
         assertEquals(3, testRoom.getTickCount());
