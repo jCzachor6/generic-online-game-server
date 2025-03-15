@@ -1,8 +1,8 @@
 package generic.online.game.server.gogs;
 
+import generic.online.game.server.gogs.api.auth.password.PasswordEncoder;
+import generic.online.game.server.gogs.api.auth.password.RawPasswordEncoder;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.liquer.pencil.encoder.SSHA224PasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.function.Consumer;
 
@@ -15,7 +15,7 @@ public class GogsConfig {
     public int wsServerPort = 9090;
 
     public boolean authRegister = true;
-    public PasswordEncoder passwordEncoder = new SSHA224PasswordEncoder();
+    public PasswordEncoder passwordEncoder = new RawPasswordEncoder();
     public boolean authAnonymousUser = true;
     public boolean authLogin = true;
 
