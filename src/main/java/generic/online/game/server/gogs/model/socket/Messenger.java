@@ -13,15 +13,15 @@ public class Messenger {
     private final Map<String, SocketIOClient> clientsMap;
 
     public void send(User from, User to, Message message) {
-        send(from.getToken(), to.getToken(), message);
+        send(from.token(), to.token(), message);
     }
 
     public void send(User from, Room room, Message message) {
-        send(from.getToken(), room.getRoomId(), message);
+        send(from.token(), room.getRoomId(), message);
     }
 
     public void send(Collection<User> from, Room room, Message message) {
-        from.forEach(u -> send(u.getToken(), room.getRoomId(), message));
+        from.forEach(u -> send(u.token(), room.getRoomId(), message));
     }
 
     public void send(String from, String to, Message message) {
@@ -29,10 +29,10 @@ public class Messenger {
     }
 
     public void sendBack(Collection<User> from, Message message) {
-        from.forEach(u -> send(u.getToken(), u.getToken(), message));
+        from.forEach(u -> send(u.token(), u.token(), message));
     }
 
     public void sendToAll(Room room, Message message) {
-        room.getOperations().connectedUsers().forEach(u -> send(u.getToken(), room.getRoomId(), message));
+        room.getOperations().connectedUsers().forEach(u -> send(u.token(), room.getRoomId(), message));
     }
 }

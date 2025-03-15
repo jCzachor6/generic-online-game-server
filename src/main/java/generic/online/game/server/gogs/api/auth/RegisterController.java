@@ -24,8 +24,12 @@ public class RegisterController {
     private void init() {
         javalin.post("/gogs/api/auth/register", (ctx) -> {
             AuthRequest request = ctx.bodyAsClass(AuthRequest.class);
-            AuthResponse response = new AuthResponse(authenticationService.registerUser(request));
-            ctx.status(HttpStatus.OK_200).json(response);
+            try {
+                AuthResponse response = authenticationService.registerUser(request);
+                ctx.status(HttpStatus.OK_200).json(response);
+            } catch (Exception e) {
+                ctx.status(HttpStatus.BAD_REQUEST_400).json(e.getMessage());
+            }
         });
     }
 }

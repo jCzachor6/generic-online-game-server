@@ -22,7 +22,7 @@ public class MessageStorage {
     }
 
     public ChatMessage add(User from, ChatMessage chatMessage) {
-        chatMessage.setFrom(from.getUsername());
+        chatMessage.setFrom(from.username());
         chatMessage.setId(id++);
         chatMessage.setCreatedOn(new Date());
         chatMessage.setType(CONTENT);
@@ -37,7 +37,7 @@ public class MessageStorage {
         return messages.stream().filter(cm -> cm.getId() == chatMessage.getId())
                 .findFirst()
                 .map(msg -> {
-                    if (msg.getFrom().equals(from.getUsername())) {
+                    if (msg.getFrom().equals(from.username())) {
                         msg.setType(REMOVE);
                         msg.setContent("");
                     }
@@ -50,7 +50,7 @@ public class MessageStorage {
         return messages.stream().filter(cm -> cm.getId() == chatMessage.getId())
                 .findFirst()
                 .map(msg -> {
-                    if (msg.getFrom().equals(from.getUsername())) {
+                    if (msg.getFrom().equals(from.username())) {
                         msg.setType(EDIT);
                         msg.setEditedOn(new Date());
                         msg.setContent(chatMessage.getContent());

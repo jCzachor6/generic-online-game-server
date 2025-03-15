@@ -1,6 +1,7 @@
 package generic.online.game.server.gogs.api.auth.jwt;
 
 import com.corundumstudio.socketio.HandshakeData;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtToken;
 import io.javalin.http.Context;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -17,8 +18,8 @@ public class JwtTokenRetriever {
         return context.header(AUTHORIZATION_HEADER);
     }
 
-    public String getAuthorizationParamValue(HandshakeData handshakeData) {
-        return handshakeData.getSingleUrlParam(AUTHORIZATION_PARAM);
+    public JwtToken getAuthorizationParamValue(HandshakeData handshakeData) {
+        return new JwtToken(handshakeData.getSingleUrlParam(AUTHORIZATION_PARAM));
     }
 
     public Optional<String> getToken(String bearerToken) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import generic.online.game.server.gogs.api.auth.AnonymousController;
 import generic.online.game.server.gogs.api.auth.LoginController;
 import generic.online.game.server.gogs.api.auth.RegisterController;
+import generic.online.game.server.gogs.api.auth.jwt.JwtTokenProvider;
 import generic.online.game.server.gogs.model.rooms.UuidGenerator;
 import io.javalin.Javalin;
 import org.springframework.beans.factory.config.PlaceholderConfigurerSupport;
@@ -32,9 +33,10 @@ public class GenericOnlineGameServer {
         root.registerBean(GogsConfig.class, () -> config);
         root.registerBean(PropertiesLoader.class, PropertiesLoader::new);
         root.registerBean(UuidGenerator.class, () -> new UuidGenerator(10));
+        var jwtTokenProvider = new JwtTokenProvider(config.jwtSecret, config.jwtExpirationInMs, config.jwtEncryptionAlgorithm);
+        root.registerBean(JwtTokenProvider.class, () -> jwtTokenProvider);
         root.scan(GOGS_PACKAGE, config.basePackage);
         root.refresh();
-
 
         root.getBean(Javalin.class).start(config.serverPort);
     }

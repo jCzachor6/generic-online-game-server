@@ -1,8 +1,9 @@
 package generic.online.game.server.gogs;
 
+import generic.online.game.server.gogs.api.auth.jwt.impl.JwtHmacSha256AlgorithmImpl;
+import generic.online.game.server.gogs.api.auth.jwt.impl.JwtTokenAlgorithm;
 import generic.online.game.server.gogs.api.auth.password.PasswordEncoder;
 import generic.online.game.server.gogs.api.auth.password.RawPasswordEncoder;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.function.Consumer;
 
@@ -21,7 +22,7 @@ public class GogsConfig {
 
     public String jwtSecret = "";
     public long jwtExpirationInMs = 604800000;
-    public SignatureAlgorithm jwtEncryptionAlgorithm = SignatureAlgorithm.HS256;
+    public JwtTokenAlgorithm jwtEncryptionAlgorithm = new JwtHmacSha256AlgorithmImpl();
 
     public static Consumer<GogsConfig> noopConfig = (config) -> {
     };

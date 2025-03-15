@@ -1,46 +1,28 @@
 package generic.online.game.server.gogs.api.auth.jwt;
 
-import generic.online.game.server.gogs.GogsConfig;
-import generic.online.game.server.gogs.api.auth.model.User;
-import io.jsonwebtoken.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import generic.online.game.server.gogs.api.auth.jwt.impl.JwtTokenAlgorithm;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtClaims;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtToken;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 
-@Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    private final GogsConfig gogsConfig;
+    private final String secret;
+    private final Long expirationInMilliseconds;
+    private final JwtTokenAlgorithm algorithm;
 
-    public String generateToken(String id, String username, List<String> roles) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + gogsConfig.jwtExpirationInMs);
-
-        return Jwts.builder()
-                .setSubject(id)
-                .claim(User.Fields.id, id)
-                .claim(User.Fields.username, username)
-                .claim(User.Fields.roles, StringUtils.join(roles, ","))
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(gogsConfig.jwtEncryptionAlgorithm, gogsConfig.jwtSecret)
-                .compact();
+    public JwtToken generateToken(String id, String username, List<String> roles) throws JsonProcessingException {
+        return algorithm.generateToken(secret, expirationInMilliseconds, id, username, roles);
     }
 
-    public Claims getClaims(String token) {
-        return Jwts.parser().setSigningKey(gogsConfig.jwtSecret).parseClaimsJws(token).getBody();
+    public JwtClaims getClaims(JwtToken token) {
+        return algorithm.getClaims(secret, token);
     }
 
-    public boolean validateToken(String authToken) {
-        try {
-            getClaims(authToken);
-            return true;
-        } catch (SignatureException | MalformedJwtException | ExpiredJwtException
-                | UnsupportedJwtException | IllegalArgumentException ignored) {
-            return false;
-        }
+    public boolean validateToken(JwtToken token) {
+        return algorithm.validateToken(secret, token);
     }
 }

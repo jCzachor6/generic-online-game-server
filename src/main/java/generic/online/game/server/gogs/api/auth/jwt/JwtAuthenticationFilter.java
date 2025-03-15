@@ -2,16 +2,16 @@ package generic.online.game.server.gogs.api.auth.jwt;
 
 import com.corundumstudio.socketio.HandshakeData;
 import generic.online.game.server.gogs.api.auth.AnonymousController;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtClaims;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtToken;
 import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.utils.GogsUserService;
 import io.javalin.Javalin;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -28,12 +28,12 @@ public class JwtAuthenticationFilter {
         javalin.before(ctx -> {
             String authorizationHeaderValue = jwtTokenRetriever.getAuthorizationHeaderValue(ctx);
             Optional<String> jwtToken = jwtTokenRetriever.getToken(authorizationHeaderValue);
-            jwtToken.ifPresent(token -> {
-                if (StringUtils.isNotBlank(token) && jwtTokenProvider.validateToken(token)) {
-                    Claims claims = jwtTokenProvider.getClaims(token);
+            jwtToken.map(JwtToken::new).ifPresent(token -> {
+                if (!token.isBlank() && jwtTokenProvider.validateToken(token)) {
+                    JwtClaims claims = jwtTokenProvider.getClaims(token);
                     User user = getUser(token, claims);
-                    if (!user.getRoles().contains(AnonymousController.PROFILE)) {
-                        user = userService.map(userService.getOneById(user.getId()));
+                    if (!user.roles().contains(AnonymousController.PROFILE)) {
+                        user = userService.map(userService.getOneById(user.id()));
                     }
                     if (user == null) {
                         ctx.status(401).result("Unauthorized");
@@ -46,27 +46,27 @@ public class JwtAuthenticationFilter {
     }
 
     public boolean doFilterSocketToken(HandshakeData handshakeData) {
-        String token = jwtTokenRetriever.getAuthorizationParamValue(handshakeData);
-        if (StringUtils.isNotBlank(token) && jwtTokenProvider.validateToken(token)) {
+        var token = jwtTokenRetriever.getAuthorizationParamValue(handshakeData);
+        if (!token.isBlank() && jwtTokenProvider.validateToken(token)) {
             User user = getUser(token);
-            boolean isAnonymous = user.getRoles().contains(AnonymousController.PROFILE);
-            return isAnonymous || userService.getOneById(user.getId()) != null;
+            boolean isAnonymous = user.roles().contains(AnonymousController.PROFILE);
+            return isAnonymous || userService.getOneById(user.id()) != null;
         }
         return false;
     }
 
-    public User getUser(String token) {
-        Claims claims = jwtTokenProvider.getClaims(token);
+    public User getUser(JwtToken token) {
+        JwtClaims claims = jwtTokenProvider.getClaims(token);
         return getUser(token, claims);
     }
 
-    public User getUser(String token, Claims claims) {
+    public User getUser(JwtToken token, JwtClaims claims) {
         return new User(
-                token,
-                (String) claims.get(User.Fields.id),
-                (String) claims.get(User.Fields.username),
+                token.value(),
+                claims.getId(),
+                claims.getUsername(),
                 StringUtils.EMPTY,
-                Arrays.asList(StringUtils.split((String) claims.get(User.Fields.roles)))
+                claims.getRoles()
         );
     }
 }

@@ -2,6 +2,7 @@ package generic.online.game.server.gogs.model.rooms;
 
 import com.corundumstudio.socketio.listener.DataListener;
 import generic.online.game.server.gogs.api.auth.jwt.JwtAuthenticationFilter;
+import generic.online.game.server.gogs.api.auth.jwt.model.JwtToken;
 import generic.online.game.server.gogs.api.auth.model.User;
 import generic.online.game.server.gogs.utils.interfaces.MessageHandler;
 import generic.online.game.server.gogs.utils.interfaces.OnConnect;
@@ -31,7 +32,7 @@ public class AnnotationsScannerService {
     public void setUserConnectListener(AnnotationMethodsParams p) {
         p.getNamespace().addConnectListener(client -> {
             String token = client.getHandshakeData().getSingleUrlParam("token");
-            User user = authenticationFilter.getUser(token);
+            User user = authenticationFilter.getUser(new JwtToken(token));
             if (!validator.validateConnect(user, p)) {
                 return;
             }
@@ -48,7 +49,7 @@ public class AnnotationsScannerService {
     public void setUserDisconnectListener(AnnotationMethodsParams p) {
         p.getNamespace().addDisconnectListener(client -> {
             String token = client.getHandshakeData().getSingleUrlParam("token");
-            User user = authenticationFilter.getUser(token);
+            User user = authenticationFilter.getUser(new JwtToken(token));
             p.getClientsMap().remove(token);
             client.disconnect();
             Room room = p.getRoom();

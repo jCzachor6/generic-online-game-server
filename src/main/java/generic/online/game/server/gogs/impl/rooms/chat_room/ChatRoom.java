@@ -27,7 +27,7 @@ public class ChatRoom extends Room implements OnConnect, OnDisconnect {
 
     public void onConnect(User user) {
         ChatMessage message = new ChatMessage();
-        message.setFrom(user.getUsername());
+        message.setFrom(user.username());
         message.setType(JOIN);
         message.setCreatedOn(new Date());
         getMessenger().sendToAll(this, message);
@@ -35,7 +35,7 @@ public class ChatRoom extends Room implements OnConnect, OnDisconnect {
 
     public void onDisconnect(User user) {
         ChatMessage message = new ChatMessage();
-        message.setFrom(user.getUsername());
+        message.setFrom(user.username());
         message.setType(LEAVE);
         message.setCreatedOn(new Date());
         getMessenger().sendToAll(this, message);
